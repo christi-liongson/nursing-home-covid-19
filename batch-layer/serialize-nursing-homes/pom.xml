@@ -19,7 +19,7 @@
 >
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.uchicago.mpcs53014</groupId>
-    <artifactId>serialize-nursing-homes</artifactId>
+    <artifactId>serialize-nursing-deficiencies</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
     <properties>
