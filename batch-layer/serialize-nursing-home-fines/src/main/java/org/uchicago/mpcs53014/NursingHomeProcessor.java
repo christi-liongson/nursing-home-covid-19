@@ -3,6 +3,7 @@ package org.uchicago.mpcs53014;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -14,6 +15,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.hadoop.fs.FSDataInputStream;
 import org.uchicago.mpcs53014.nursingHomeFines.NursingHomeFines;
 
 
@@ -37,40 +40,44 @@ public abstract class NursingHomeProcessor {
 		return Double.parseDouble(s.trim());
 	}
 
-	void processLine(String line, File file) throws IOException {
+	void processLine(String line) throws IOException {
 		try {
 
 
-			processNursingHomeFines(nursingHomeFromLine(line), file);
+			processNursingHomeFines(nursingHomeFromLine(line));
 		} catch(MissingDataException e) {
 			// Just ignore lines with missing data
 		}
 	}
 
-	abstract void processNursingHomeFines(NursingHomeFines summary, File file) throws IOException;
-	BufferedReader getFileReader(File file) throws FileNotFoundException, IOException {
+	abstract void processNursingHomeFines(NursingHomeFines summary) throws IOException;
+	BufferedReader getFileReader(InputStream is) throws FileNotFoundException, IOException {
 
-		if(file.getName().endsWith(".csv"))
-			return new BufferedReader
-					(new InputStreamReader
-							(new FileInputStream(file)));
-		return new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+//		if(file.getName().endsWith(".csv"))
+//			return new BufferedReader
+//					(new InputStreamReader
+//							(new FileInputStream(file)));
+		return new BufferedReader(new InputStreamReader(is));
 	}
 
-	void processDeficienciesFile(File file) throws IOException {
-		BufferedReader br = getFileReader(file);
+	void processDeficienciesFile(InputStream is) throws IOException {
+		BufferedReader br = getFileReader(is);
 		br.readLine(); // Discard header
 		String line;
 		while((line = br.readLine()) != null) {
-			processLine(line, file);
+			processLine(line);
 		}
 	}
 
-	void processDeficienciesFile(String directoryName) throws IOException {
-		File directory = new File(directoryName);
-		File[] directoryListing = directory.listFiles();
-		for(File deficienciesFile : directoryListing)
-			processDeficienciesFile(deficienciesFile);
+	void processNursingHomeFinesCsvFile(InputStream is) throws IOException {
+//		InputStream csvInputStream =
+
+//		File directory = new File(directoryName);
+
+//		File[] directoryListing = directory.listFiles();
+//		for(File deficienciesFile : directoryListing)
+		processDeficienciesFile(is);
+
 	}
 
 	NursingHomeFines nursingHomeFromLine(String line) throws NumberFormatException, MissingDataException {
