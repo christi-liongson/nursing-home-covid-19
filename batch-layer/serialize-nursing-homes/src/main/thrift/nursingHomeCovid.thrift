@@ -11,7 +11,7 @@ struct NursingHomeCovid {
     1: required i16 reportedYear;
     2: required byte reportedMonth;
     3: required byte reportedDay;
-//    4: required string federalProviderNumber;
+    4: required string federalProviderNumber;
 //    5: required string submittedData;
 //    6: optional string passedQACheck;
 //    7: optional byte residentsWeeklyAdmissionsCovid;
