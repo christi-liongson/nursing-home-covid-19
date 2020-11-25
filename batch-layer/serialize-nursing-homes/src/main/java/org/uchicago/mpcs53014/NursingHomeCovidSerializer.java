@@ -64,14 +64,14 @@ public class NursingHomeCovidSerializer {
                                         SequenceFile.Writer.valueClass(BytesWritable.class),
                                         SequenceFile.Writer.compression(CompressionType.NONE)));
                     }
-                    System.out.println("In Monthmap get writer " + reportedMonth);
+//                    System.out.println("In Monthmap get writer " + reportedMonth);
                     return monthMap.get(reportedMonth);
                 }
                 @Override
                 void processNursingSummary(NursingHomeCovid summary, String filename) throws IOException {
                     try {
-                        System.out.println(summary);
-                        System.out.println("appending to serializer " + summary.reportedMonth);
+//                        System.out.println(summary);
+//                        System.out.println("appending to serializer " + summary.reportedMonth);
                         getWriter(summary.reportedMonth, summary.reportedYear).append(new IntWritable(1), new BytesWritable(ser.serialize(summary)));;
                     } catch (TException e) {
                         throw new IOException(e);
@@ -88,7 +88,7 @@ public class NursingHomeCovidSerializer {
             else
                 files = new InputStreamsForLocalDirectory(fileName);
 
-            System.out.println(files);
+//            System.out.println(files);
 
             for (InputStream is : files) {
                 processor.processNursingFile(is, fileName);

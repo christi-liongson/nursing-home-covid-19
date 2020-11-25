@@ -52,13 +52,55 @@ public abstract class NursingHomeProcessor {
 		}
 	}
 
+	private boolean parseBoolean (String response) {
+		return (response == "Y");
+	}
 
 	NursingHomeCovid nursingFromLine(CSVRecord record) throws NumberFormatException, MissingDataException {
-		return new NursingHomeCovid(Short.parseShort(record.get("Week Ending").substring(6).trim()),
+//		if (record.get("Residents Weekly Admissions COVID-19") == null) {
+//			System.out.println(record.get("Residents Weekly Admissions COVID-19"));
+//		}
+//		System.out.println("Weekly admissions for " + record.get("Federal Provider Number") + ": " + record.get("Residents Weekly Admissions COVID-19"));
+//		System.out.println(record.get("Submitted Data"));
+
+
+		NursingHomeCovid summary = new NursingHomeCovid(Short.parseShort(record.get("Week Ending").substring(6).trim()),
 				Byte.parseByte(record.get("Week Ending").substring(0, 2).trim()),
 				Byte.parseByte(record.get("Week Ending").substring(3, 5).trim()),
-				record.get("Federal Provider Number"));
+				record.get("Federal Provider Number"),
+				parseBoolean(record.get("Submitted Data")));
+		if (record.get("Passed Quality Assurance Check").length() > 0) {
+			summary.setPassedQACheck(parseBoolean(record.get("Passed Quality Assurance Check")));
+		}
+		if (record.get("Residents Weekly Admissions COVID-19").length() > 0) {
+//			System.out.println(record.get("Residents Weekly Admissions COVID-19"));
+			summary.setResidentsWeeklyAdmissionsCovid(Short.parseShort(record.get("Residents Weekly Admissions COVID-19").trim()));
+		}
+		if (record.get("Residents Weekly Confirmed COVID-19").length() > 0) {
+			summary.setResidentsWeeklyAdmissionsCovid(Short.parseShort(record.get("Residents Weekly Confirmed COVID-19")));
+		}
+		if (record.get("Residents Weekly Suspected COVID-19").length() > 0) {
+			summary.setResidentsWeeklyAdmissionsCovid(Short.parseShort(record.get("Residents Weekly Suspected COVID-19")));
+		}
+		if (record.get("Residents Weekly COVID-19 Deaths").length() > 0) {
+			summary.setResidentsWeeklyAllDeaths(Short.parseShort(record.get("Residents Weekly COVID-19 Deaths")));
+		}
+		if (record.get("Residents Weekly All Deaths").length() > 0) {
+			summary.setResidentsWeeklyAllDeaths(Short.parseShort(record.get("Residents Weekly All Deaths")));
+		}
+		if (record.get("Number of All Beds").length() > 0) {
+			summary.setNumberAllBeds(Short.parseShort(record.get("Number of All Beds")));
+		}
+		if (record.get("Total Number of Occupied Beds").length() > 0) {
+			summary.setTotalNumberOccupiedBeds(Short.parseShort(record.get("Total Number of Occupied Beds")));
+		}
+		if (record.get("Resident Access to Testing in Facility").length() > 0) {
+			summary.setResidentAccessToTesting(parseBoolean(record.get("Resident Access to Testing in Facility")));
+		}
+
+
+		return summary;
+
 	}
 
 }
-c
