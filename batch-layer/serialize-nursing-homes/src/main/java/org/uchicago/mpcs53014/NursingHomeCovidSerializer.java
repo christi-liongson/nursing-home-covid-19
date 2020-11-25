@@ -57,71 +57,32 @@ public class NursingHomeCovidSerializer {
             final TSerializer ser = new TSerializer(new TBinaryProtocol.Factory());
             NursingHomeProcessor processor = new NursingHomeProcessor() {
                 Map<Integer, SequenceFile.Writer> monthMap = new HashMap<Integer, SequenceFile.Writer>();
-//                Map<Integer, SequenceFile.Writer> yearMap = new HashMap<Integer, SequenceFile.Writer>();\
 
-//                Pattern yearPattern = Pattern.compile("^.*\\d+-\\d+-(\\d+)\\.op\\.gz");
-//                SequenceFile.Writer writer = SequenceFile.createWriter(finalConf,
-//                        SequenceFile.Writer.file(
-//                                new Path("/christiannenic/final_project/batch/covid")),
-//                        SequenceFile.Writer.keyClass(IntWritable.class),
-//                        SequenceFile.Writer.valueClass(BytesWritable.class),
-//                        SequenceFile.Writer.compression(CompressionType.NONE));
-
-                Writer getWriter(short reportedMonth) throws IOException {
+                Writer getWriter(int reportedMonth, int reportedYear) throws IOException {
                     if(!monthMap.containsKey(reportedMonth)) {
-                        monthMap.put(0,
+                        monthMap.put(reportedMonth,
                                SequenceFile.createWriter(finalConf,
                                         SequenceFile.Writer.file(
-                                                new Path(targetDir)),
+                                                new Path(targetDir + "/nursing-home-" + reportedMonth + reportedYear)),
                                         SequenceFile.Writer.keyClass(IntWritable.class),
                                         SequenceFile.Writer.valueClass(BytesWritable.class),
                                         SequenceFile.Writer.compression(CompressionType.NONE)));
                     }
-                    return monthMap.get(0);
+                    System.out.println("In Monthmap get writer " + reportedMonth);
+                    return monthMap.get(reportedMonth);
                 }
                 @Override
-                void processWeatherSummary(NursingHomeCovid summary, String filename) throws IOException {
+                void processNursingSummary(NursingHomeCovid summary, String filename) throws IOException {
                     try {
-                        getWriter(summary.reportedMonth).append(new IntWritable(1), new BytesWritable(ser.serialize(summary)));;
+                        System.out.println(summary);
+                        System.out.println("appending to serializer " + summary.reportedMonth);
+                        getWriter(summary.reportedMonth, summary.reportedYear).append(new IntWritable(1), new BytesWritable(ser.serialize(summary)));;
                     } catch (TException e) {
                         throw new IOException(e);
                     }
                 }
             };
 
-//            String fileName = args[0];
-//            String s3Prefix = "s3://";
-//            InputStream inputStream = null;
-//
-//            String withoutS3Prefix
-//                    = fileName.startsWith(s3Prefix) ? fileName.substring(s3Prefix.length()) : fileName;
-//            // Up to the first / is the bucket name
-//            String bucketName = withoutS3Prefix.substring(0, withoutS3Prefix.indexOf('/'));
-//            // After the bucket name is the object prefix
-//            String objectPrefix = withoutS3Prefix.substring(bucketName.length()+1);
-//            AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(Regions.US_EAST_2).build();
-//            try {
-//                S3Object object = s3.getObject(bucketName, objectPrefix);
-//                inputStream = object.getObjectContent();
-//
-//                for (InputStream is : file) {
-//                    processor.processNoaaFile(is);
-//                }
-//            } catch (AmazonServiceException | IOException e) {
-//                System.out.println(e.getMessage());
-//            } finally {
-//                try {
-//                    if (inputStream != null) {
-//                        inputStream.close();
-//                    }
-//                } catch (IOException e) {
-//                    System.out.println(e.getMessage());
-//                }
-//            }
-
-
-
-//            processor.processNoaaFile(fs.openFile(args[0]));
             Iterable<InputStream> files;
             String fileName = args[0];
             if(fileName.startsWith("hdfs://"))
@@ -131,8 +92,11 @@ public class NursingHomeCovidSerializer {
             else
                 files = new InputStreamsForLocalDirectory(fileName);
 
+            System.out.println(files);
+
             for (InputStream is : files) {
-                processor.processNoaaFile(is, fileName);
+                System.out.println(is);/
+                processor.processNursingFile(is, fileName);
             }
 
 

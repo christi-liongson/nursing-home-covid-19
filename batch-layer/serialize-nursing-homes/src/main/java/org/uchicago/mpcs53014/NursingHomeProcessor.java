@@ -48,57 +48,30 @@ public abstract class NursingHomeProcessor {
 
 	void processLine(CSVRecord record, String filename) throws IOException {
 		try {
-			processWeatherSummary(weatherFromLine(record), filename);
+			processNursingSummary(nursingFromLine(record), filename);
 		} catch(MissingDataException e) {
 			// Just ignore lines with missing data
 		}
 	}
 
-	abstract void processWeatherSummary(NursingHomeCovid summary, String filename) throws IOException;
+	abstract void processNursingSummary(NursingHomeCovid summary, String filename) throws IOException;
 	BufferedReader getFileReader(InputStream is) throws FileNotFoundException, IOException {
 		return new BufferedReader(new InputStreamReader(is));
 	}
 
-	void processNoaaFile(InputStream is, String filename) throws IOException {
+	void processNursingFile(InputStream is, String filename) throws IOException {
 		BufferedReader br = getFileReader(is);
-//		br.readLine(); // Discard header
-//		String line;
-//		File file = new File(fileName);
-//		FileReader csvData = new FileReader(file);
-//		Reader csvData = new Reader new File(fileName));
-		CSVParser csvFileParser = CSVParser(br, CSVFormat.EXCEL.withFirstRecordAsHeader());
-		
-//		Iterator <CSVRecord> csvRecordIterator = reader.iterator();
-//		while((line = br.readLine()) != null) {
-//			processLine(line, archiveEntryName);
-//		}
-//		while (csvRecordIterator.hasNext()) {
-//			CSVRecord csvRecord = csvRecordIterator.next();
-//			processLine(csvRecord, filename);
-//
-//		}
+		CSVParser csvFileParser = new CSVParser(br, CSVFormat.EXCEL.withFirstRecordAsHeader());
+
 		for (CSVRecord csvRecord : csvFileParser) {
 			processLine(csvRecord, filename);
 		}
 	}
 
-//	void processNoaaTarFile(InputStream is) throws IOException {
-//		TarArchiveInputStream tarArchiveInputStream = new TarArchiveInputStream(is);
-//		TarArchiveEntry entry;
-//		while ((entry = (TarArchiveEntry)tarArchiveInputStream.getNextEntry()) != null) {
-//			if(!entry.getName().endsWith(".gz"))
-//				continue;
-//			processNoaaFile(tarArchiveInputStream, entry.getName());
-//		}
-//	}
 
-	NursingHomeCovid weatherFromLine(CSVRecord record) throws NumberFormatException, MissingDataException {
-//		String cvsSplitBy = ",";
-//		String[] nursingHome = line.split(cvsSplitBy);
-		NursingHomeCovid summary
-				= new NursingHomeCovid(Short.parseShort(record.get(0).substring(6).trim()),
+	NursingHomeCovid nursingFromLine(CSVRecord record) throws NumberFormatException, MissingDataException {
+		return new NursingHomeCovid(Short.parseShort(record.get(0).substring(6).trim()),
 				Byte.parseByte(record.get(0).substring(0, 2).trim()), Byte.parseByte(record.get(0).substring(3, 5).trim()));
-		return summary;
 	}
 
 }
