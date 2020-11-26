@@ -4,11 +4,13 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Optional;
 import java.io.InputStreamReader;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.uchicago.mpcs53014.nursingHomeCovid.NursingHomeCovid;
+//import org.uchicago.mpcs53014.nursingHomeCovid.OptionalCount;
 
 
 public abstract class NursingHomeProcessor {
@@ -52,7 +54,7 @@ public abstract class NursingHomeProcessor {
 		}
 	}
 
-	private boolean parseBoolean (String response) {
+	private Boolean parseBoolean (String response) {
 		return (response == "Y");
 	}
 
@@ -69,34 +71,44 @@ public abstract class NursingHomeProcessor {
 				Byte.parseByte(record.get("Week Ending").substring(3, 5).trim()),
 				record.get("Federal Provider Number"),
 				parseBoolean(record.get("Submitted Data")));
-		if (record.get("Passed Quality Assurance Check").length() > 0) {
-			summary.setPassedQACheck(parseBoolean(record.get("Passed Quality Assurance Check")));
-		}
+//		Optional<String> passedQACheck = Optional.ofNullable(record.get("Passed Quality Assurance Check"));
+//		if (Optional.ofNullable(record.get("Passed Quality Assurance Check")))
+
+
+
+//		if (record.get("Passed Quality Assurance Check").length() > 0) {
+//			summary.setPassedQACheck(null);
+//		} else {
+//			summary.setPassedQACheck(null);
+//			Optional<Boolean> val = Optional.empty();
+//			Optional<Boolean>.empty();
+//			summary.setPassedQACheck(val);
+//		}
 		if (record.get("Residents Weekly Admissions COVID-19").length() > 0) {
-//			System.out.println(record.get("Residents Weekly Admissions COVID-19"));
-			summary.setResidentsWeeklyAdmissionsCovid(Short.parseShort(record.get("Residents Weekly Admissions COVID-19").trim()));
+////			System.out.println(record.get("Residents Weekly Admissions COVID-19"));
+			summary.setResidentsWeeklyAdmissionsCovid((Short.parseShort(record.get("Residents Weekly Admissions COVID-19"))));
 		}
-		if (record.get("Residents Weekly Confirmed COVID-19").length() > 0) {
-			summary.setResidentsWeeklyAdmissionsCovid(Short.parseShort(record.get("Residents Weekly Confirmed COVID-19")));
-		}
-		if (record.get("Residents Weekly Suspected COVID-19").length() > 0) {
-			summary.setResidentsWeeklyAdmissionsCovid(Short.parseShort(record.get("Residents Weekly Suspected COVID-19")));
-		}
-		if (record.get("Residents Weekly COVID-19 Deaths").length() > 0) {
-			summary.setResidentsWeeklyAllDeaths(Short.parseShort(record.get("Residents Weekly COVID-19 Deaths")));
-		}
-		if (record.get("Residents Weekly All Deaths").length() > 0) {
-			summary.setResidentsWeeklyAllDeaths(Short.parseShort(record.get("Residents Weekly All Deaths")));
-		}
-		if (record.get("Number of All Beds").length() > 0) {
-			summary.setNumberAllBeds(Short.parseShort(record.get("Number of All Beds")));
-		}
-		if (record.get("Total Number of Occupied Beds").length() > 0) {
-			summary.setTotalNumberOccupiedBeds(Short.parseShort(record.get("Total Number of Occupied Beds")));
-		}
-		if (record.get("Resident Access to Testing in Facility").length() > 0) {
-			summary.setResidentAccessToTesting(parseBoolean(record.get("Resident Access to Testing in Facility")));
-		}
+//		if (record.get("Residents Weekly Confirmed COVID-19").length() > 0) {
+//			summary.setResidentsWeeklyAdmissionsCovid(Short.parseShort(record.get("Residents Weekly Confirmed COVID-19")));
+//		}
+//		if (record.get("Residents Weekly Suspected COVID-19").length() > 0) {
+//			summary.setResidentsWeeklyAdmissionsCovid(Short.parseShort(record.get("Residents Weekly Suspected COVID-19")));
+//		}
+//		if (record.get("Residents Weekly COVID-19 Deaths").length() > 0) {
+//			summary.setResidentsWeeklyAllDeaths(Short.parseShort(record.get("Residents Weekly COVID-19 Deaths")));
+//		}
+//		if (record.get("Residents Weekly All Deaths").length() > 0) {
+//			summary.setResidentsWeeklyAllDeaths(Short.parseShort(record.get("Residents Weekly All Deaths")));
+//		}
+//		if (record.get("Number of All Beds").length() > 0) {
+//			summary.setNumberAllBeds(Short.parseShort(record.get("Number of All Beds")));
+//		}
+//		if (record.get("Total Number of Occupied Beds").length() > 0) {
+//			summary.setTotalNumberOccupiedBeds(Short.parseShort(record.get("Total Number of Occupied Beds")));
+//		}
+//		if (record.get("Resident Access to Testing in Facility").length() > 0) {
+//			summary.setResidentAccessToTesting(parseBoolean(record.get("Resident Access to Testing in Facility")));
+//		}
 
 
 		return summary;

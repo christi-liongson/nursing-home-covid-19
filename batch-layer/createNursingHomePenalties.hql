@@ -15,7 +15,7 @@ WITH SERDEPROPERTIES (
    "quoteChar"     = "\""
 )
 STORED AS TEXTFILE
-  location 's3://christiannenic-mpcs53014/final_project/penalties/'
+  location '/tmp/christiannenic/final_project/raw_data/penalties'
 
 tblproperties("skip.header.line.count"="1");
 

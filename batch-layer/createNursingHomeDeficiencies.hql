@@ -26,7 +26,7 @@ WITH SERDEPROPERTIES (
    "quoteChar"     = "\""
 )
 STORED AS TEXTFILE
-  location 's3://christiannenic-mpcs53014/final_project/deficiencies/'
+  location '/tmp/christiannenic/final_project/raw_data/deficiencies'
 
 tblproperties("skip.header.line.count"="1");
 
