@@ -10,6 +10,6 @@ CREATE EXTERNAL TABLE IF NOT EXISTS christiannenic_nursing_covid
   STORED AS SEQUENCEFILE
   LOCATION '/tmp/christiannenic/final_project/thrift_serialization';
 
-  SELECT * FROM christiannenic_nursing_covid LIMIT 2;
+SELECT * FROM christiannenic_nursing_covid LIMIT 1;
 
-  DESCRIBE christiannenic_nursing_covid;
+DESCRIBE christiannenic_nursing_covid;

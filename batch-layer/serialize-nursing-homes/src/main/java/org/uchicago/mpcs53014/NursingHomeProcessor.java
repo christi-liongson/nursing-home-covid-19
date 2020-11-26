@@ -59,58 +59,70 @@ public abstract class NursingHomeProcessor {
 	}
 
 	NursingHomeCovid nursingFromLine(CSVRecord record) throws NumberFormatException, MissingDataException {
-//		if (record.get("Residents Weekly Admissions COVID-19") == null) {
-//			System.out.println(record.get("Residents Weekly Admissions COVID-19"));
-//		}
-//		System.out.println("Weekly admissions for " + record.get("Federal Provider Number") + ": " + record.get("Residents Weekly Admissions COVID-19"));
-//		System.out.println(record.get("Submitted Data"));
-
 
 		NursingHomeCovid summary = new NursingHomeCovid(Short.parseShort(record.get("Week Ending").substring(6).trim()),
 				Byte.parseByte(record.get("Week Ending").substring(0, 2).trim()),
 				Byte.parseByte(record.get("Week Ending").substring(3, 5).trim()),
 				record.get("Federal Provider Number"),
 				parseBoolean(record.get("Submitted Data")));
-//		Optional<String> passedQACheck = Optional.ofNullable(record.get("Passed Quality Assurance Check"));
-//		if (Optional.ofNullable(record.get("Passed Quality Assurance Check")))
-
-
-
-//		if (record.get("Passed Quality Assurance Check").length() > 0) {
-//			summary.setPassedQACheck(null);
-//		} else {
-//			summary.setPassedQACheck(null);
-//			Optional<Boolean> val = Optional.empty();
-//			Optional<Boolean>.empty();
-//			summary.setPassedQACheck(val);
-//		}
+		if (record.get("Passed Quality Assurance Check").length() > 0) {
+			summary.setPassedQACheck(record.get("Passed Quality Assurance Check"));
+		}
 		if (record.get("Residents Weekly Admissions COVID-19").length() > 0) {
-////			System.out.println(record.get("Residents Weekly Admissions COVID-19"));
 			summary.setResidentsWeeklyAdmissionsCovid((Short.parseShort(record.get("Residents Weekly Admissions COVID-19"))));
 		}
-//		if (record.get("Residents Weekly Confirmed COVID-19").length() > 0) {
-//			summary.setResidentsWeeklyAdmissionsCovid(Short.parseShort(record.get("Residents Weekly Confirmed COVID-19")));
-//		}
-//		if (record.get("Residents Weekly Suspected COVID-19").length() > 0) {
-//			summary.setResidentsWeeklyAdmissionsCovid(Short.parseShort(record.get("Residents Weekly Suspected COVID-19")));
-//		}
-//		if (record.get("Residents Weekly COVID-19 Deaths").length() > 0) {
-//			summary.setResidentsWeeklyAllDeaths(Short.parseShort(record.get("Residents Weekly COVID-19 Deaths")));
-//		}
-//		if (record.get("Residents Weekly All Deaths").length() > 0) {
-//			summary.setResidentsWeeklyAllDeaths(Short.parseShort(record.get("Residents Weekly All Deaths")));
-//		}
-//		if (record.get("Number of All Beds").length() > 0) {
-//			summary.setNumberAllBeds(Short.parseShort(record.get("Number of All Beds")));
-//		}
-//		if (record.get("Total Number of Occupied Beds").length() > 0) {
-//			summary.setTotalNumberOccupiedBeds(Short.parseShort(record.get("Total Number of Occupied Beds")));
-//		}
-//		if (record.get("Resident Access to Testing in Facility").length() > 0) {
-//			summary.setResidentAccessToTesting(parseBoolean(record.get("Resident Access to Testing in Facility")));
-//		}
-
-
+		if (record.get("Residents Weekly Confirmed COVID-19").length() > 0) {
+			summary.setResidentsWeeklyAdmissionsCovid(Short.parseShort(record.get("Residents Weekly Confirmed COVID-19")));
+		}
+		if (record.get("Residents Weekly Suspected COVID-19").length() > 0) {
+			summary.setResidentsWeeklyAdmissionsCovid(Short.parseShort(record.get("Residents Weekly Suspected COVID-19")));
+		}
+		if (record.get("Residents Weekly COVID-19 Deaths").length() > 0) {
+			summary.setResidentsWeeklyAllDeaths(Short.parseShort(record.get("Residents Weekly COVID-19 Deaths")));
+		}
+		if (record.get("Residents Weekly All Deaths").length() > 0) {
+			summary.setResidentsWeeklyAllDeaths(Short.parseShort(record.get("Residents Weekly All Deaths")));
+		}
+		if (record.get("Number of All Beds").length() > 0) {
+			summary.setNumberAllBeds(Short.parseShort(record.get("Number of All Beds")));
+		}
+		if (record.get("Total Number of Occupied Beds").length() > 0) {
+			summary.setTotalNumberOccupiedBeds(Short.parseShort(record.get("Total Number of Occupied Beds")));
+		}
+		if (record.get("Resident Access to Testing in Facility").length() > 0) {
+			summary.setResidentAccessToTesting(record.get("Resident Access to Testing in Facility"));
+		}
+		if (record.get("Laboratory Type Is State Health Dept").length() > 0) {
+			summary.setLabTypeStateHealthDept(record.get("Laboratory Type Is State Health Dept"));
+		}
+		if (record.get("Laboratory Type Is Private Lab").length() > 0) {
+			summary.setLabTypePrivateLab(record.get("Laboratory Type Is Private Lab"));
+		}
+		if (record.get("Laboratory Type Is Other").length() > 0) {
+			summary.setLabTypeOther(record.get("Laboratory Type Is Other"));
+		}
+		if (record.get("Able to Test or Obtain Resources to Test All Current Residents Within Next 7 Days").length() > 0) {
+			summary.setAbleTestAllResidentsWithin7Days(record.get("Able to Test or Obtain Resources to Test All Current Residents Within Next 7 Days"));
+		}
+		if (record.get("Reason for Not Testing Staff and/or Personnel - Lack of PPE for Personnel ").length() > 0) {
+			summary.setNotTestingResidentsLackOfPPE(record.get("Reason for Not Testing Staff and/or Personnel - Lack of PPE for Personnel "));
+		}
+		if (record.get("Reason for Not Testing Staff and/or Personnel - Lack of Supplies").length() > 0) {
+			summary.setNotTestingResidentsLackOfSupplies(record.get("Reason for Not Testing Staff and/or Personnel - Lack of Supplies"));
+		}
+		if (record.get("Reason for Not Testing Residents  - Lack of Access to Laboratory").length() > 0) {
+			summary.setNotTestingResidentsLackAccessLab(record.get("Reason for Not Testing Residents  - Lack of Access to Laboratory"));
+		}
+		if (record.get("Reason for Not Testing Residents - Lack of Access to Trained Personnel ").length() > 0) {
+			summary.setNotTestingResidentsLackAccessTrainedPersonnel(record.get("Reason for Not Testing Residents - Lack of Access to Trained Personnel "));
+		}
+		if (record.get("Reason for Not Testing Residents  - Uncertainty About Reimbursement").length() > 0) {
+			summary.setNotTestingResidentsUncertaintyReimbursement(record.get("Reason for Not Testing Residents  - Uncertainty About Reimbursement"));
+		}
+		if (record.get("Reason for Not Testing Residents  - Other").length() > 0) {
+			summary.setNotTestingResidentsOther(record.get("Reason for Not Testing Residents  - Other"));
+		}
+		
 		return summary;
 
 	}

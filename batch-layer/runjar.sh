@@ -1,3 +1,5 @@
+s3-dist-cp --src=s3://christiannenic-mpcs53014/final_project/nursing-covid/ --dest=hdfs:///tmp/christiannenic/final_project/raw_data/nursing-covid
+
 cd christiannenic/final_project/src/target
 
 hdfs dfs -rm -r /tmp/christiannenic/final_project/thrift_serialization
