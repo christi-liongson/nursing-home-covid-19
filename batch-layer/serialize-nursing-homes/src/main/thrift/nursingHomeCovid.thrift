@@ -64,9 +64,9 @@ struct NursingHomeCovid {
 //    44: optional bool testedAsymptomaticStaffAsSurveillance;
 //    45: optional bool testedSubGroupStaff;
 //    46: optional bool inHousePOCTestMachine;
-    47: optional i16 staffWeeklyConfirmedCovid;
-    48: optional i16 staffWeeklySuspectedCovid;
-    49: optional i16 staffWeeklyCovidDeaths;
+    47: optional i16 staffWeeklyConfirmedCovid= -1;
+    48: optional i16 staffWeeklySuspectedCovid= -1;
+    49: optional i16 staffWeeklyCovidDeaths= -1;
     50: optional string shortageNursingStaff;
     51: optional string shortageClinicalStaff;
     52: optional string shortageAides;
@@ -78,11 +78,11 @@ struct NursingHomeCovid {
     58: optional string oneWeekSupplyGloves;
     59: optional string oneWeekSupplyHandSanitizer;
     60: optional string ventilatorDependentUnit;
-//    61: optional byte numberVentilatorsInFacility;
-//    62: optional byte numberVentilatorsInUseCovid;
-//    63: optional bool oneWeekSupplyVentilatorSupplies;
-//    64: optional i16 totalResidentConfirmedPer1000Residents;
+    61: optional i16 numberVentilatorsInFacility = -1;
+    62: optional i16 numberVentilatorsInUseCovid = -1;
+    63: optional string oneWeekSupplyVentilatorSupplies;
+    64: optional double totalResidentConfirmedPer1000Residents = -1.0;
 //    65: optional byte totalResidentCovidDeathsAsPercentageofConfirmedCases;
-//    66: optional bool threeOrMoreConfirmedCasesThisWeek;
+    66: optional string threeOrMoreConfirmedCasesThisWeek;
 }
 

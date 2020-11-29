@@ -145,8 +145,59 @@ public abstract class NursingHomeProcessor {
 		if (record.get("Staff Weekly Confirmed COVID-19").length() > 0) {
 			summary.setStaffWeeklyConfirmedCovid(Short.parseShort(record.get("Staff Weekly Confirmed COVID-19")));
 		}
-		if (record.get("Staff Weekly Confirmed COVID-19").length() > 0) {
-			summary.setStaffWeeklyConfirmedCovid(Short.parseShort(record.get("Staff Weekly Confirmed COVID-19")));
+		if (record.get("Staff Weekly Suspected COVID-19").length() > 0) {
+			summary.setStaffWeeklySuspectedCovid(Short.parseShort(record.get("Staff Weekly Suspected COVID-19")));
+		}
+		if (record.get("Staff Weekly COVID-19 Deaths").length() > 0) {
+			summary.setStaffWeeklyCovidDeaths(Short.parseShort(record.get("Staff Weekly COVID-19 Deaths")));
+		}
+		if (record.get("Shortage of Nursing Staff").length() > 0) {
+			summary.setShortageNursingStaff(record.get("Shortage of Nursing Staff"));
+		}
+		if (record.get("Shortage of Clinical Staff").length() > 0) {
+			summary.setShortageClinicalStaff(record.get("Shortage of Clinical Staff"));
+		}
+		if (record.get("Shortage of Aides").length() > 0) {
+			summary.setShortageAides(record.get("Shortage of Aides"));
+		}
+		if (record.get("Shortage of Other Staff").length() > 0) {
+			summary.setShortageOtherStaff(record.get("Shortage of Other Staff"));
+		}
+		if (record.get("One-Week Supply of N95 Masks").length() > 0) {
+			summary.setOneWeekSupplyN95Masks(record.get("One-Week Supply of N95 Masks"));
+		}
+		if (record.get("One-Week Supply of Surgical Masks").length() > 0) {
+			summary.setOneWeekSupplySurgicalMasks(record.get("One-Week Supply of Surgical Masks"));
+		}
+		if (record.get("One-Week Supply of Eye Protection").length() > 0) {
+			summary.setOneWeekSupplyEyeProtection(record.get("One-Week Supply of Eye Protection"));
+		}
+		if (record.get("One-Week Supply of Gowns").length() > 0) {
+			summary.setOneWeekSupplyGowns(record.get("One-Week Supply of Gowns"));
+		}
+		if (record.get("One-Week Supply of Gloves").length() > 0) {
+			summary.setOneWeekSupplyGloves(record.get("One-Week Supply of Gloves"));
+		}
+		if (record.get("One-Week Supply of Hand Sanitizer").length() > 0) {
+			summary.setOneWeekSupplyHandSanitizer(record.get("One-Week Supply of Hand Sanitizer"));
+		}
+		if (record.get("Ventilator Dependent Unit").length() > 0) {
+			summary.setVentilatorDependentUnit(record.get("Ventilator Dependent Unit"));
+		}
+		if (record.get("Number of Ventilators in Facility").length() > 0) {
+			summary.setNumberVentilatorsInFacility(Short.parseShort(record.get("Number of Ventilators in Facility")));
+		}
+		if (record.get("Number of Ventilators in Use for COVID-19").length() > 0) {
+			summary.setNumberVentilatorsInUseCovid(Short.parseShort(record.get("Number of Ventilators in Use for COVID-19")));
+		}
+		if (record.get("One-Week Supply of Ventilator Supplies").length() > 0) {
+			summary.setOneWeekSupplyVentilatorSupplies(record.get("One-Week Supply of Ventilator Supplies"));
+		}
+		if (record.get("Total Resident Confirmed COVID-19 Cases Per 1,000 Residents").length() > 0) {
+			summary.setTotalResidentConfirmedPer1000Residents(Float.parseFloat(record.get("Total Resident Confirmed COVID-19 Cases Per 1,000 Residents")));
+		}
+		if (record.get("Three or More Confirmed COVID-19 Cases This Week").length() > 0) {
+			summary.setThreeOrMoreConfirmedCasesThisWeek(record.get("Three or More Confirmed COVID-19 Cases This Week"));
 		}
 
 
