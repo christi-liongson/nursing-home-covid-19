@@ -10,7 +10,6 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.uchicago.mpcs53014.nursingHomeCovid.NursingHomeCovid;
-//import org.uchicago.mpcs53014.nursingHomeCovid.OptionalCount;
 
 
 public abstract class NursingHomeProcessor {
@@ -104,11 +103,11 @@ public abstract class NursingHomeProcessor {
 		if (record.get("Able to Test or Obtain Resources to Test All Current Residents Within Next 7 Days").length() > 0) {
 			summary.setAbleTestAllResidentsWithin7Days(record.get("Able to Test or Obtain Resources to Test All Current Residents Within Next 7 Days"));
 		}
-		if (record.get("Reason for Not Testing Staff and/or Personnel - Lack of PPE for Personnel ").length() > 0) {
-			summary.setNotTestingResidentsLackOfPPE(record.get("Reason for Not Testing Staff and/or Personnel - Lack of PPE for Personnel "));
+		if (record.get("Reason for Not Testing Residents - Lack of PPE for Personnel ").length() > 0) {
+			summary.setNotTestingResidentsLackOfPPE(record.get("Reason for Not Testing Residents - Lack of PPE for Personnel "));
 		}
-		if (record.get("Reason for Not Testing Staff and/or Personnel - Lack of Supplies").length() > 0) {
-			summary.setNotTestingResidentsLackOfSupplies(record.get("Reason for Not Testing Staff and/or Personnel - Lack of Supplies"));
+		if (record.get("Reason for Not Testing Residents - Lack of Supplies").length() > 0) {
+			summary.setNotTestingResidentsLackOfSupplies(record.get("Reason for Not Testing Residents - Lack of Supplies"));
 		}
 		if (record.get("Reason for Not Testing Residents  - Lack of Access to Laboratory").length() > 0) {
 			summary.setNotTestingResidentsLackAccessLab(record.get("Reason for Not Testing Residents  - Lack of Access to Laboratory"));
@@ -122,7 +121,37 @@ public abstract class NursingHomeProcessor {
 		if (record.get("Reason for Not Testing Residents  - Other").length() > 0) {
 			summary.setNotTestingResidentsOther(record.get("Reason for Not Testing Residents  - Other"));
 		}
-		
+		if (record.get("During Past Two Weeks Average Time to Receive Resident Test Results").length() > 0) {
+			summary.setAvgTimeToReceiveResidentTestResults(record.get("During Past Two Weeks Average Time to Receive Resident Test Results"));
+		}
+		if (record.get("Has Facility Performed Resident Tests Since Last Report").length() > 0) {
+			summary.setFacilityPerformedResidentTestsSinceLastReport(record.get("Has Facility Performed Resident Tests Since Last Report"));
+		}
+		if (record.get("Tested Residents with New Signs or Symptoms").length() > 0) {
+			summary.setTestedResidentsWithNewSignsOrSymptoms(record.get("Tested Residents with New Signs or Symptoms"));
+		}
+		if (record.get("Tested Asymptomatic Residents in a Unit or Section After a New Case").length() > 0) {
+			summary.setTestedAsymptomaticResidentsWithinUnitAfterNewCase(record.get("Tested Asymptomatic Residents in a Unit or Section After a New Case"));
+		}
+		if (record.get("Tested Asymptomatic Residents Facility-Wide After a New Case").length() > 0) {
+			summary.setTestedAsymptomaticResidentsFacilityWideAfterNewCase(record.get("Tested Asymptomatic Residents Facility-Wide After a New Case"));
+		}
+		if (record.get("Tested Asymptomatic Residents Without Known Exposure as Surveillance").length() > 0) {
+			summary.setTestedAsymptomaticResidentsAsSurveillance(record.get("Tested Asymptomatic Residents Without Known Exposure as Surveillance"));
+		}
+		if (record.get("Tested Asymptomatic Residents Facility-Wide After a New Case").length() > 0) {
+			summary.setTestedAsymptomaticResidentsAsSurveillance(record.get("Tested Asymptomatic Residents Facility-Wide After a New Case"));
+		}
+		if (record.get("Staff Weekly Confirmed COVID-19").length() > 0) {
+			summary.setStaffWeeklyConfirmedCovid(Short.parseShort(record.get("Staff Weekly Confirmed COVID-19")));
+		}
+		if (record.get("Staff Weekly Confirmed COVID-19").length() > 0) {
+			summary.setStaffWeeklyConfirmedCovid(Short.parseShort(record.get("Staff Weekly Confirmed COVID-19")));
+		}
+
+
+
+
 		return summary;
 
 	}
