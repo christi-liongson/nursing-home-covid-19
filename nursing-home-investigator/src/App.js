@@ -1,7 +1,11 @@
 import logo from './logo.svg';
 import './App.css';
+import { hbase } from 'hbase'
 
 function App() {
+  // const hclient = hbase({host: })
+  // console.log(process.argv);
+
   return (
     <div className="App">
       <header className="App-header">
