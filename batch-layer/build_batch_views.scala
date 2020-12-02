@@ -1,6 +1,6 @@
-// prepare search form data
-val facilities = spark.table("christiannenic_health_deficiencies").select(
-       "providername", "federalprovidernumber").distinct()
+// // prepare search form data
+// val facilities = spark.table("christiannenic_health_deficiencies").select(
+//        "providername", "federalprovidernumber").distinct()
 
 
 // get facilities by state
@@ -79,9 +79,9 @@ var covid_over_time_facility = spark.sql("""select
        from christiannenic_nursing_covid""")
 
 // Merge views for facility page
-var facility_covid_info = facilities_by_state.join(covid_numbers, "federalprovidernumber").join(
-       covid_response, "federalprovidernumber").join(deficiencies,
-       "federalprovidernumber").join(penalties_by_facility, "federalprovidernumber")
+var facility_covid_info = facilities_by_state.join(covid_numbers, "federalprovidernumber", "left").join(
+       covid_response, "federalprovidernumber", "left").join(deficiencies,
+       "federalprovidernumber").join(penalties_by_facility, "federalprovidernumber", "left")
 
 
 // Facility overview
@@ -91,6 +91,10 @@ var facility_overview = facility_covid_info.select(
        "totalresidentcoviddeaths","infectiondeficiencies").withColumn("state_facility",
        concat($"providerstate", lit("_"), regexp_replace(
               facility_covid_info.col("providername"), "[^A-Z0-9_]", "")))
+
+// Get search form data
+val facilities = facility_overview.select(
+       "providername", "federalprovidernumber").distinct()
 
 
 // Write tables to Hive

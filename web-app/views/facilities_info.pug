@@ -1,0 +1,122 @@
+html
+    head
+        title Nursing Home Investigator
+        link(rel='stylesheet' href='/bootstrap3/css/bootstrap.css')
+        link(rel='stylesheet' href='/assets/css/ct-paper.css')
+    body
+        div.container
+            h2= providerName
+            p #{providerAddress} <br /> #{providerCity}, #{providerState} #{providerZipCode}
+            div.row
+                div.col-sm-3
+                    div
+                        span #{totalResidentCases}
+                    div
+                        span Total Reported Resident COVID-19 Cases
+                div.col-sm-3
+                    div
+                        span #{totalResidentDeaths}
+                    div
+                        span Total Reported Resident COVID-19 Deaths
+                div.col-sm-3
+                    div
+                        span #{totalStaffCases}
+                    div
+                        span Total Reported Staff COVID-19 Cases
+                div.col-sm-3
+                    div
+                        span #{totalStaffDeaths}
+                    div
+                        span Total Reported Staff COVID-19 Deaths
+            div.row
+                div.col.col-lg-2
+                    block visualization
+                div.col
+
+            h2 COVID-19 Practices
+            div.row
+                div.col-sm-6
+                    if ableTestResidentsWithinWeek === "Y"
+                        span.label.label-success Able to Test Residents Within 7 Days
+                    if oneWeekSupplyEyeProtection === "Y"
+                        span.label.label-success One Week Supply: Eye Protection
+                    if oneWeekSupplyGloves === "Y"
+                        span.label.label-success One Week Supply: Gloves
+                    if oneWeekSupplyHandSanitizer === "Y"
+                        span.label.label-success One Week Supply: Hand Sanitizer
+                    if oneWeekSupplyN95Masks === "Y"
+                        span.label.label-success One Week Supply: N95 Masks
+                    if oneWeekSupplySurgicalMasks === "Y"
+                        span.label.label-success One Week Supply: Surgical Masks
+                    if (shortageAides === "N" & shortageClinicalStaff === "N")
+                        span.label.label-success No Staff Shortages
+
+                div.col-sm-6
+                    if ableTestResidentsWithinWeek === "N"
+                        span.label.label-danger Not Able to Test Residents Within 7 Days
+                    if notTestingLabAccess === "Y"
+                        span.label.label-danger Not Testing Residents: Lack of Access to Lab
+                    if notTestingLackTrainedPersonnel === "Y"
+                        span.label.label-danger Not Testing Residents: Lack of Access to Trained Personnel
+                    if notTestingLackPPE === "Y"
+                        span.label.label-danger Not Testing Residents: Lack of Access to PPE
+                    if notTestingLackSupplies === "Y"
+                        span.label.label-danger Not Testing Residents: Lack of Supplies
+                    if notTestingUncertaintyReimbursement === "Y"
+                        span.label.label-danger Not Testing Residents: Uncertainty About Reimbursement
+                    if notTestingOther === "Y"
+                        span.label.label-danger Not Testing Residents: Other
+                    if oneWeekSupplyEyeProtection === "N"
+                        span.label.label-danger Lacking: One Week Supply: Eye Protection
+                    if oneWeekSupplyGloves === "N"
+                        span.label.label-danger Lacking: One Week Supply: Gloves
+                    if oneWeekSupplyHandSanitizer === "N"
+                        span.label.label-danger Lacking: One Week Supply: Hand Sanitizer
+                    if oneWeekSupplyN95Masks === "N"
+                        span.label.label-danger Lacking: One Week Supply: N95 Masks
+                    if oneWeekSupplySurgicalMasks === "N"
+                        span.label.label-danger lacking: One Week Supply: Surgical Masks
+                    if shortageAides === "Y"
+                        span.label.label-danger Shortage: Aides
+                    if shortageClinicalStaff === "Y"
+                        span.label.label-danger Shortage: Clinical Staff
+
+
+            if avgTimeReceiveResidentTestResults !== "NaN"
+                p #[strong Average Time to Receive Resident Test Results:] #{avgTimeReceiveResidentTestResults}
+            else
+                p #[strong Average Time to Receive Resident Test Results:] #[span.label.label-warning Not Reported]
+
+            if percentOccupied !== "NaN"
+                p #[strong Percent Occupied Beds:] : #{percentOccupied}%
+            else
+                p #[strong Percent Occupied Beds:] #[span.label.label-warning Not Reported]
+            if percentVentilators >= 0
+                p #[strong Percent of Ventilators in Facility in Use for COVID-19 purposes:] #{percentVentilators}
+
+            h2 Deficiencies
+            div.row
+                div.col-sm-2.col-sm-offset-1
+                    div
+                        span Total Deficiencies
+                div.col-sm-2
+                    div
+                        span
+                    div
+                        span Infection-related Deficiencies
+                div.col-sm-2
+                    div
+                        span #{severeDeficiencies}
+                    div
+                        span Severe Deficiencies
+                div.col-sm-2
+                    div
+                        span #{severeInfectionDeficiences}
+                    div
+                        span Severe Infection-related Deficiencies
+                div.col-sm-2
+                    div
+                        span Penalties
+
+
+
