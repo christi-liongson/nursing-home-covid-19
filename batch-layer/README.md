@@ -24,6 +24,6 @@ Start Hbase. Create the necessary HBase tables using the following commands:
 create 'christiannenic_facilities_list', 'facility'
 create 'christiannenic_state_list', 'state'
 create 'christiannenic_facility_covid_info', 'info'
-create 'christiannenic_covid_over_time', 'covid'
+create 'christiannenic_covid_over_time', 'report'
 create 'christiannenic_state_facility_overview', 'summary'
 ```

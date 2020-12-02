@@ -73,9 +73,9 @@ var covid_response = spark.sql("""SELECT * FROM (SELECT federalprovidernumber,
 
 // COVID cases by date per facility
 var covid_over_time_facility = spark.sql("""select
-       concat(federalprovidernumber, reportedyear, reportedmonth, reportedday) as key,
+       concat(federalprovidernumber, "_", reportedyear, "-", reportedmonth, "-", reportedday) as key,
        reportedyear, reportedmonth, reportedday, residentsweeklyconfirmedcovid,
-       residentsweeklycoviddeaths, staffweeklycoviddeaths
+       residentsweeklycoviddeaths, staffweeklyconfirmedcovid, staffweeklycoviddeaths
        from christiannenic_nursing_covid""")
 
 // Merge views for facility page
@@ -85,11 +85,11 @@ var facility_covid_info = facilities_by_state.join(covid_numbers, "federalprovid
 
 
 // Facility overview
-var facility_overview = facility_covid_info.select("providerstate",
+var facility_overview = facility_covid_info.select(
        "providername", "federalprovidernumber", "provideraddress", "providercity",
-       "providerzipcode", "totalresidentconfirmedcovid",
-       "totalresidentcoviddeaths","infectiondeficiencies").withColumn("key",
-       concat($"providerstate", regexp_replace(
+       "providerzipcode", "providerstate", "totalresidentconfirmedcovid",
+       "totalresidentcoviddeaths","infectiondeficiencies").withColumn("state_facility",
+       concat($"providerstate", lit("_"), regexp_replace(
               facility_covid_info.col("providername"), "[^A-Z0-9_]", "")))
 
 

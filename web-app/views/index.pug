@@ -1,0 +1,14 @@
+html
+    head
+        title Nursing Home Investigator
+        link(rel='stylesheet' href='/bootstrap3/css/bootstrap.css')
+        link(rel='stylesheet' href='/assets/css/ct-paper.css')
+    body
+        h1 Nursing Home Investigator
+        p Compilation of COVID-19 testing and infection control practices and COVID-19 cases among residents and staff as reported by nursing homes to CMS.
+        p This report also contains counts of infection-related and severe deficiencies of each nursing home
+        h2 Search by Facility
+        select
+            each facility in facilities
+                option(value=facility.federalprovidernumber)= facility.key
+

@@ -1,4 +1,6 @@
 /.idea
+web-app/.idea
+batch-layer/serialize-nursing-homes/.idea
 workspace.xml
 /web-app/node_modules
 

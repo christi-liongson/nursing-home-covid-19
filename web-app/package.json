@@ -9,6 +9,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1"
+    "assert": "^2.0.0",
+    "express": "^4.17.1",
+    "fs": "0.0.1-security",
+    "hbase": "^0.6.1",
+    "http": "0.0.1-security",
+    "mustache": "^4.0.1",
+    "pug": "^3.0.0",
+    "url": "^0.11.0"
   }
 }
