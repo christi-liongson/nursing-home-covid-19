@@ -1,0 +1,142 @@
+extends layout.pug
+
+block content
+
+    div.section-title.container
+        div.row
+            div.card
+                div.card-body
+                    div.section-title
+                        h1.slide-in.visible= providerName
+                        p.lead #{providerAddress} <br /> #{providerCity}, #{providerState} #{providerZipCode}
+                    h2 Key Statistics
+                    div.row.top-buffer
+                        div.col-sm-2.text-center.py-5
+                            h3 #{totalResidentCases}
+                            p Total Reported Resident COVID-19 Cases
+                        div.col-sm-2.text-center.py-5
+                            h3 #{totalResidentAdmissions}
+                            p Total COVID-19 Resident Admissions
+                        div.col-sm-2.text-center.py-5
+                            h3 #{totalResidentDeaths}
+                            p Total Reported Resident COVID-19 Deaths
+                        div.col-sm-2.text-center.py-5
+                            h3 #{totalStaffCases}
+                            p Total Reported Staff COVID-19 Cases
+                        div.col-sm-2.text-center.py-5
+                            h3 #{totalStaffDeaths}
+                            p Total Reported Staff COVID-19 Deaths
+
+    div.container.my-10.top-buffer
+        div.bg-white.py-5
+            div.card
+                div.card-body
+                    div.section-title.container.mr-auto.py-10.mb-5
+                        div.col-lg-8.col-md-10.ml-auto.mr-auto.py-5
+                            div.row
+                                h2 COVID-19 Infection Prevention and Control Practices
+                                p #[strong Survey Response Rate:] #{responseRate}%. Of survey responses, #{qaResponseRate}% passed Data Quality Checks
+                        div.container
+                            div.row
+                                div.col-sm-6
+                                    h3 Facility Practices with Positive Impact on Infection Control
+                                    ul
+                                        if ableTestResidentsWithinWeek === "Y"
+                                            li Able to Test Residents Within 7 Days
+                                        if testedAsymptomaticResidentsAsSurveillance === "Y"
+                                            li Tested Asymptomatic Residents as Surveillance
+                                        if testedAsymptomaticResidentsFacilityWide === "Y"
+                                            li Tested Asymptomatic Residents Facility-Wide After a New Case
+                                        if testedAsymptomaticResidentsInUnit === "Y"
+                                            li Tested Asymptomatic Residents Within Unit After a New Case
+                                        if testedResidentsWithNewSignsOrSymptoms === "Y"
+                                            li Tested Residents with New Signs or Symptoms
+                                        if oneWeekSupplyEyeProtection === "Y"
+                                            li One Week Supply: Eye Protection
+                                        if oneWeekSupplyGloves === "Y"
+                                            li One Week Supply: Gloves
+                                        if oneWeekSupplyHandSanitizer === "Y"
+                                            li One Week Supply: Hand Sanitizer
+                                        if oneWeekSupplyN95Masks === "Y"
+                                            li One Week Supply: N95 Masks
+                                        if oneWeekSupplySurgicalMasks === "Y"
+                                            li One Week Supply: Surgical Masks
+                                        if (shortageAides === "N" & shortageClinicalStaff === "N" & shortageNursingStaff === "N" & shortageOtherStaff === "N")
+                                            li No Staff Shortages
+                                div.col-sm-6
+                                    h3 Facility Practices with Negative Impact on Infection Control
+                                    ul
+                                        if ableTestResidentsWithinWeek === "N"
+                                            li Not Able to Test Residents Within 7 Days
+                                        if testedResidentsWithNewSignsOrSymptoms === "N"
+                                            li Did Not Test Residents with New Signs or Symptoms
+                                        if notTestingLabAccess === "Y"
+                                            li Not Testing Residents: Lack of Access to Lab
+                                        if notTestingLackTrainedPersonnel === "Y"
+                                            li Not Testing Residents: Lack of Access to Trained Personnel
+                                        if notTestingLackPPE === "Y"
+                                            li Not Testing Residents: Lack of Access to PPE
+                                        if notTestingLackSupplies === "Y"
+                                            li Not Testing Residents: Lack of Supplies
+                                        if notTestingUncertaintyReimbursement === "Y"
+                                            li Not Testing Residents: Uncertainty About Reimbursement
+                                        if notTestingOther === "Y"
+                                            li Not Testing Residents: Other
+                                        if oneWeekSupplyEyeProtection === "N"
+                                            li Lacking: One Week Supply: Eye Protection
+                                        if oneWeekSupplyGloves === "N"
+                                            li Lacking: One Week Supply: Gloves
+                                        if oneWeekSupplyHandSanitizer === "N"
+                                            li Lacking: One Week Supply: Hand Sanitizer
+                                        if oneWeekSupplyN95Masks === "N"
+                                            li Lacking: One Week Supply: N95 Masks
+                                        if oneWeekSupplySurgicalMasks === "N"
+                                            li lacking: One Week Supply: Surgical Masks
+                                        if shortageAides === "Y"
+                                            li Shortage: Aides
+                                        if shortageClinicalStaff === "Y"
+                                            li Shortage: Clinical Staff
+                                        if shortageNursingStaff === "Y"
+                                            li Shortage: Nursing Staff
+                                        if shortageOtherStaff === "Y"
+                                            li Shortage: Other Staff
+
+                        div.container.top-buffer
+                            div.row
+                                if avgTimeReceiveResidentTestResults !== "NaN"
+                                    p #[strong Average Time to Receive Resident Test Results:] #{avgTimeReceiveResidentTestResults}
+                                else
+                                    p #[strong Average Time to Receive Resident Test Results:] #[span.label.label-warning Not Reported]
+
+                                if percentOccupied !== "NaN"
+                                    p #[strong Percent Occupied Beds:] : #{percentOccupied}%
+                                else
+                                    p #[strong Percent Occupied Beds:] #[span.label.label-warning Not Reported]
+                                if percentVentilators >= 0
+                                    p #[strong Percent of Ventilators in Facility in Use for COVID-19 purposes:] #{percentVentilators}
+
+
+    div.container.top-buffer
+        div.card
+            div.card-body
+                h2 Deficiencies
+
+                div.row
+                    div.col-sm-2.col-sm-offset-1.text-center
+                        h3 #{totalDeficiencies}
+                        p Total Deficiencies
+                    div.col-sm-2.text-center
+                        h3 #{infectionDeficiencies}
+                        p Infection-related Deficiencies
+                    div.col-sm-2.text-center
+                        h3 #{severeDeficiencies}
+                        p Severe Deficiencies
+                    div.col-sm-2.text-center
+                        h3 #{severeInfectionDeficiences}
+                        p Severe Infection-related Deficiencies
+                    div.col-sm-2.text-center
+                        if totalFines !== undefined
+                            h3 $#{totalFines}
+                        else
+                            h3 $0
+                        p Penalties

@@ -32,11 +32,6 @@ tblproperties("skip.header.line.count"="1");
 
 create external table christiannenic_health_deficiencies(
     federalProviderNumber string,
-    providerName string,
-    providerAddress string,
-    providerCity string,
-    providerState string,
-    providerZipCode string,
     surveyDay smallInt,
     surveyMonth smallInt,
     surveyYear smallInt,
@@ -53,7 +48,6 @@ create external table christiannenic_health_deficiencies(
     inspectionCycle string,
     standardDeficiency string,
     complaintDeficiency boolean,
-    nursingHomeLocation string,
     processingDay smallInt,
     processingMonth smallInt,
     processingYear smallInt)
@@ -62,11 +56,6 @@ create external table christiannenic_health_deficiencies(
 insert overwrite table christiannenic_health_deficiencies
 select
     federal_provider_number,
-    provider_name,
-    provider_address,
-    provider_city,
-    provider_state,
-    provider_zip_code,
     substring(survey_date, 4, 2),
     substring(survey_date, 1, 2),
     substring(survey_date, 7, 4),
@@ -83,7 +72,6 @@ select
     inspection_cycle,
     standard_deficiency,
     complaint_deficiency,
-    location,
     substring(processing_date, 4, 2),
     substring(processing_date, 1, 2),
     substring(processing_date, 7, 4)

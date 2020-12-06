@@ -36,6 +36,10 @@ Create the file:
 curl https://data.medicare.gov/api/views/r5ix-sfxw/rows.csv | curl -x "socks5h://localhost:8157" -X PUT -T - "http://ip-172-31-10-71.us-east-2.compute.internal:9864/webhdfs/v1/tmp/christiannenic/final_project/raw_data/deficiencies/health-deficiencies.csv?op=CREATE&user.name=hadoop&namenoderpcaddress=ip-172-31-11-144.us-east-2.compute.internal:8020&createflag=&createparent=true&overwrite=false"
 ```
 
+
+NOTE: CMS.gov has redesigned their website as of December 2, 2020. The URL originally used in data ingestion no longer works. To redownload files, use the following link: https://data.cms.gov/provider-data/sites/default/files/resources/abca93500cc2ac0e22d42ededfc2e7bd_1605453860/NH_HealthCitations_Nov2020.csv.
+
+
 ## Ingesting Fines Dataset
 
 ```bash
@@ -53,3 +57,5 @@ Create the file:
 ```bash
 curl https://data.medicare.gov/api/views/g6vv-u9sr/rows.csv | curl -x "socks5h://localhost:8157" -X PUT -T - "http://ip-172-31-5-87.us-east-2.compute.internal:9864/webhdfs/v1/tmp/christiannenic/final_project/raw_data/penalties/penalties.csv?op=CREATE&user.name=hadoop&namenoderpcaddress=ip-172-31-11-144.us-east-2.compute.internal:8020&createflag=&createparent=true&overwrite=false"
 ```
+
+NOTE: CMS.gov has redesigned their website as of December 2, 2020. The URL originally used in data ingestion no longer works. To redownload files, use the following link: https://data.cms.gov/provider-data/sites/default/files/resources/1c63d689a69b79609ef247be05e2bb51_1605453862/NH_Penalties_Nov2020.csv

@@ -1,88 +1,61 @@
 namespace java org.uchicago.mpcs53014.nursingHomeCovid
 
-//enum avgTimeTestResults {
-//    LESS_THAN_ONE_DAY = 1,
-//    ONE_TO_TWO_DAYS = 2,
-//    THREE_TO_SEVEN_DAYS = 3,
-//    OVER_SEVEN_DAYS = 4
-//}
 
-//union OptionalCountEnvelope {
-//    1: optional OptionalCount result;
-//}
-////    1: string input "NULL";
-////    1: string input = "NULL";
-////}
-//struct OptionalCount {
-//    1: optional i16 op;
-//}
 
 struct NursingHomeCovid {
     1: required i16 reportedYear;
     2: required byte reportedMonth;
     3: required byte reportedDay;
     4: required string federalProviderNumber;
-    5: required bool submittedData;
-    6: optional string passedQACheck;
-    7: optional i16 residentsWeeklyAdmissionsCovid = -1;
-    8: optional i16 residentsWeeklyConfirmedCovid = -1;
-    9: optional i16 residentsWeeklySuspectedCovid = -1;
-    10: optional i16 residentsWeeklyAllDeaths = -1;
-    11: optional i16 residentsWeeklyCovidDeaths = -1;
-    12: optional i16 numberAllBeds = -1;
-    13: optional i16 totalNumberOccupiedBeds = -1;
-    14: optional string residentAccessToTesting;
-    15: optional string labTypeStateHealthDept;
-    16: optional string labTypePrivateLab;
-    17: optional string labTypeOther;
-    18: optional string ableTestAllResidentsWithin7Days;
-    19: optional string notTestingResidentsLackOfPPE;
-    20: optional string notTestingResidentsLackOfSupplies;
-    21: optional string notTestingResidentsLackAccessLab;
-    22: optional string notTestingResidentsLackAccessTrainedPersonnel;
-    23: optional string notTestingResidentsUncertaintyReimbursement;
-    24: optional string notTestingResidentsOther;
-    25: optional string avgTimeToReceiveResidentTestResults;
-    26: optional string facilityPerformedResidentTestsSinceLastReport;
-    27: optional string testedResidentsWithNewSignsOrSymptoms;
-    28: optional string testedAsymptomaticResidentsWithinUnitAfterNewCase;
-    29: optional string testedAsymptomaticResidentsFacilityWideAfterNewCase;
-    30: optional string testedAsymptomaticResidentsAsSurveillance;
-//    31: optional string testedSubGroupResidents;
-//    32: optional bool ableToTestAllStaffWithin7Days;
-//    33: optional bool notTestingStaffLackOfPPE;
-//    34: optional bool notTestingStaffLackOfSupplies;
-//    35: optional bool notTestingStaffLackAccessLab;
-//    36: optional bool notTestingStaffLackAccessTrainedPersonnel;
-//    37: optional bool notTestingStaffUncertaintyReimbursement;
-//    38: optional bool notTestingStaffOther;
-//    39: optional string avgTimeToReceiveStaffTestResults;
-//    40: optional bool facilityPerformedStaffTestsSinceLastReport;
-//    41: optional bool testedStaffWithNewSignsOrSymptoms;
-//    42: optional bool testedAsymptomaticStaffWithinUnitAfterNewCase;
-//    43: optional bool testedAsymptomaticStaffFacilityWideAfterNewCase;
-//    44: optional bool testedAsymptomaticStaffAsSurveillance;
-//    45: optional bool testedSubGroupStaff;
-//    46: optional bool inHousePOCTestMachine;
-    47: optional i16 staffWeeklyConfirmedCovid= -1;
-    48: optional i16 staffWeeklySuspectedCovid= -1;
-    49: optional i16 staffWeeklyCovidDeaths= -1;
-    50: optional string shortageNursingStaff;
-    51: optional string shortageClinicalStaff;
-    52: optional string shortageAides;
-    53: optional string shortageOtherStaff;
-    54: optional string oneWeekSupplyN95Masks;
-    55: optional string oneWeekSupplySurgicalMasks;
-    56: optional string oneWeekSupplyEyeProtection;
-    57: optional string oneWeekSupplyGowns;
-    58: optional string oneWeekSupplyGloves;
-    59: optional string oneWeekSupplyHandSanitizer;
-    60: optional string ventilatorDependentUnit;
-    61: optional i16 numberVentilatorsInFacility = -1;
-    62: optional i16 numberVentilatorsInUseCovid = -1;
-    63: optional string oneWeekSupplyVentilatorSupplies;
-    64: optional double totalResidentConfirmedPer1000Residents = -1.0;
-//    65: optional byte totalResidentCovidDeathsAsPercentageofConfirmedCases;
-    66: optional string threeOrMoreConfirmedCasesThisWeek;
+    5: required string providerName;
+    6: required string providerAddress;
+    7: required string providerCity;
+    8: required string providerState;
+    9: required string providerZipCode;
+    10: required string submittedData;
+
+//    Optional fields
+
+    11: optional string passedQACheck;
+    12: optional i16 residentsWeeklyAdmissionsCovid;
+    13: optional i16 residentsWeeklyConfirmedCovid ;
+    14: optional i16 residentsWeeklySuspectedCovid;
+    15: optional i16 residentsWeeklyAllDeaths;
+    16: optional i16 residentsWeeklyCovidDeaths;
+    17: optional i16 numberAllBeds = -1;
+    18: optional i16 totalNumberOccupiedBeds = -1;
+    19: optional string residentAccessToTesting;
+    20: optional string ableTestAllResidentsWithin7Days;
+    21: optional string notTestingResidentsLackOfPPE;
+    22: optional string notTestingResidentsLackOfSupplies;
+    23: optional string notTestingResidentsLackAccessLab;
+    24: optional string notTestingResidentsLackAccessTrainedPersonnel;
+    25: optional string notTestingResidentsUncertaintyReimbursement;
+    26: optional string notTestingResidentsOther;
+    27: optional string avgTimeToReceiveResidentTestResults;
+    28: optional string facilityPerformedResidentTestsSinceLastReport;
+    29: optional string testedResidentsWithNewSignsOrSymptoms;
+    30: optional string testedAsymptomaticResidentsWithinUnitAfterNewCase;
+    31: optional string testedAsymptomaticResidentsFacilityWideAfterNewCase;
+    32: optional string testedAsymptomaticResidentsAsSurveillance;
+    33: optional i16 staffWeeklyConfirmedCovid;
+    34: optional i16 staffWeeklySuspectedCovid;
+    35: optional i16 staffWeeklyCovidDeaths;
+    36: optional string shortageNursingStaff;
+    37: optional string shortageClinicalStaff;
+    38: optional string shortageAides;
+    39: optional string shortageOtherStaff;
+    40: optional string oneWeekSupplyN95Masks;
+    41: optional string oneWeekSupplySurgicalMasks;
+    42: optional string oneWeekSupplyEyeProtection;
+    43: optional string oneWeekSupplyGowns;
+    44: optional string oneWeekSupplyGloves;
+    45: optional string oneWeekSupplyHandSanitizer;
+    46: optional string ventilatorDependentUnit;
+    47: optional i16 numberVentilatorsInFacility = -1;
+    48: optional i16 numberVentilatorsInUseCovid = -1;
+    49: optional string oneWeekSupplyVentilatorSupplies;
+    50: optional string threeOrMoreConfirmedCasesThisWeek;
+
 }
 

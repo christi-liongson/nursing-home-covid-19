@@ -1,3 +1,5 @@
+# Batch Layer ReadMe
+
 Data sources are ingested into HDFS for serialization. See `data_ingestion.md` for the script to ingest raw data files. Since data is loaded in as csvs and the size of the files are < 1 GB, storing raw data files in HDFS allows us to append new data to files. If storage later becomes an issue, raw data files should be stored in S3 to preserve space and grouped when importing data back into S3. Sample code for data ingestion into S3 and copying files into HDFS is in `data_ingest_s3.sh`.
 
 ## Batch Layer

@@ -1,5 +1,3 @@
-set hive.support.quoted.identifiers=none;
-
 -- Writing christiannenic_facilities_list_hive hive table to hbase
 
 create external table  christiannenic_facilities_list (
@@ -27,16 +25,12 @@ insert overwrite table christiannenic_state_list
 create external table  christiannenic_facility_covid_info (
   federalprovidernumber string, providerstate string, providername string,
   provideraddress string, providercity string, providerzipcode string,
-  totalsubmissions bigint, totaldataentries bigint, totaldidnotpassqa bigint,
+  totalsubmissions bigint, totaldataentries bigint, totalpassqa bigint,
   totalresidentcovidadmissions bigint, totalresidentconfirmedcovid bigint,
   totalresidentcoviddeaths bigint, totalstaffconfirmedcovid bigint,
-  totalstaffcoviddeaths bigint, totalnumberoccupiedbeds smallint,
-  numberallbeds smallint, abletestallresidentswithin7days string,
-  nottestingresidentslackofppe string, nottestingresidentslackofsupplies string,
-  nottestingresidentslackaccesslab string,
-  nottestingresidentslackaccesstrainedpersonnel string,
-  nottestingresidentsuncertaintyreimbursement string,
-  nottestingresidentsother string, avgtimetoreceiveresidenttestresults string,
+  totalstaffcoviddeaths bigint, totalnumberoccupiedbeds bigint,
+  numberallbeds bigint, abletestallresidentswithin7days string,
+  avgtimetoreceiveresidenttestresults string,
   facilityperformedresidenttestssincelastreport string,
   testedresidentswithnewsignsorsymptoms string,
   testedasymptomaticresidentswithinunitafternewcase string,
@@ -49,7 +43,6 @@ create external table  christiannenic_facility_covid_info (
   oneweeksupplygloves string, oneweeksupplyhandsanitizer string,
   ventilatordependentunit string, numberventilatorsinfacility smallint,
   numberventilatorsinusecovid smallint, oneweeksupplyventilatorsupplies string,
-  totalresidentconfirmedper1000residents double,
   threeormoreconfirmedcasesthisweek string,
   totaldeficiencies bigint, infectiondeficiencies bigint,
   severedeficiencies bigint, severeinfectiondeficiencies bigint,
@@ -58,13 +51,10 @@ create external table  christiannenic_facility_covid_info (
 STORED BY 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
 WITH SERDEPROPERTIES ('hbase.columns.mapping' = ':key,
 info:providerstate, info:providername, info:provideraddress, info:providercity,
-info:providerzipcode, info:totalsubmissions, info:totaldataentries, info:totaldidnotpassqa,
-info:totalresidentcovidadmissions, info:totalresidentconfirmedcovid,
-info:totalresidentcoviddeaths, info:totalstaffconfirmedcovid, info:totalstaffcoviddeaths,
-info:totalnumberoccupiedbeds, info:numberallbeds, info:abletestallresidentswithin7days,
-info:nottestingresidentslackofppe, info:nottestingresidentslackofsupplies,
-info:nottestingresidentslackaccesslab, info:nottestingresidentslackaccesstrainedpersonnel,
-info:nottestingresidentsuncertaintyreimbursement, info:nottestingresidentsother,
+info:providerzipcode, info:totalsubmissions#b, info:totaldataentries#b, info:totalpassqa#b,
+info:totalresidentcovidadmissions#b, info:totalresidentconfirmedcovid#b,
+info:totalresidentcoviddeaths#b, info:totalstaffconfirmedcovid#b, info:totalstaffcoviddeaths#b,
+info:totalnumberoccupiedbeds#b, info:numberallbeds#b, info:abletestallresidentswithin7days,
 info:avgtimetoreceiveresidenttestresults, info:facilityperformedresidenttestssincelastreport,
 info:testedresidentswithnewsignsorsymptoms, info:testedasymptomaticresidentswithinunitafternewcase,
 info:testedasymptomaticresidentsfacilitywideafternewcase,
@@ -74,17 +64,37 @@ info:shortageotherstaff, info:oneweeksupplyn95masks, info:oneweeksupplysurgicalm
 info:oneweeksupplyeyeprotection, info:oneweeksupplygowns, info:oneweeksupplygloves,
 info:oneweeksupplyhandsanitizer, info:ventilatordependentunit,
 info:numberventilatorsinfacility, info:numberventilatorsinusecovid,
-info:oneweeksupplyventilatorsupplies, info:totalresidentconfirmedper1000residents,
+info:oneweeksupplyventilatorsupplies,
 info:threeormoreconfirmedcasesthisweek,
-info:totaldeficiencies, info:infectiondeficiencies, info:severedeficiencies,
-info:severeinfectiondeficiencies, info:totalfines')
+info:totaldeficiencies#b, info:infectiondeficiencies#b, info:severedeficiencies#b,
+info:severeinfectiondeficiencies#b, info:totalfines#b')
 TBLPROPERTIES ('hbase.table.name' = 'christiannenic_facility_covid_info');
 
--- Skipping rank from import into Hbase table, select all other columns.
--- Source: https://stackoverflow.com/questions/51227890/hive-how-to-select-all-but-one-column
-
-insert overwrite table christiannenic_facility_covid_info
-  select `(rank)?+.+` from christiannenic_facility_covid_info_hive;
+insert overwrite table christiannenic_facility_covid_info select
+  federalprovidernumber, providerstate, providername,
+  provideraddress, providercity, providerzipcode,
+  totalsubmissions, totaldataentries, totalpassqa,
+  totalresidentcovidadmissions, totalresidentconfirmedcovid,
+  totalresidentcoviddeaths, totalstaffconfirmedcovid,
+  totalstaffcoviddeaths, totalnumberoccupiedbeds,
+  numberallbeds, abletestallresidentswithin7days,
+  avgtimetoreceiveresidenttestresults,
+  facilityperformedresidenttestssincelastreport,
+  testedresidentswithnewsignsorsymptoms,
+  testedasymptomaticresidentswithinunitafternewcase,
+  testedasymptomaticresidentsfacilitywideafternewcase,
+  testedasymptomaticresidentsassurveillance,
+  shortagenursingstaff, shortageclinicalstaff,
+  shortageaides, shortageotherstaff,
+  oneweeksupplyn95masks, oneweeksupplysurgicalmasks,
+  oneweeksupplyeyeprotection, oneweeksupplygowns,
+  oneweeksupplygloves, oneweeksupplyhandsanitizer,
+  ventilatordependentunit, numberventilatorsinfacility,
+  numberventilatorsinusecovid, oneweeksupplyventilatorsupplies,
+  threeormoreconfirmedcasesthisweek,
+  totaldeficiencies, infectiondeficiencies,
+  severedeficiencies, severeinfectiondeficiencies,
+  totalfines from christiannenic_facility_covid_info_hive;
 
 -- Writing christiannenic_covid_over_time_hive hive table to hbase
 
@@ -113,8 +123,8 @@ STORED BY 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
 WITH SERDEPROPERTIES ('hbase.columns.mapping' = ':key,
 summary:providername, summary:federalprovidernumber, summary:provideraddress,
 summary:providercity, summary:providerzipcode, summary:providerstate,
-summary:totalresidentconfirmedcovid,
-summary:totalresidentcoviddeaths, summary:infectiondeficiencies')
+summary:totalresidentconfirmedcovid#b,
+summary:totalresidentcoviddeaths#b, summary:infectiondeficiencies#b')
 TBLPROPERTIES ('hbase.table.name' = 'christiannenic_state_facility_overview');
 
 insert overwrite table christiannenic_state_facility_overview

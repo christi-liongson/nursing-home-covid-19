@@ -1,0 +1,71 @@
+extends layout.pug
+
+block content
+    div.content.clearfix
+        div.container.mb-5
+            div.section-title.col-lg-8.col-md-10.ml-auto.mr-auto
+                h1.slide-in.visible Nursing Home Investigator
+                div.section-title
+                    p
+                        | Compilation of COVID-19 testing and infection control practices and COVID-19
+                        | cases among residents and staff as reported by nursing homes to CMS.
+                    p This report also contains counts of infection-related and severe deficiencies of each nursing home.
+        div.container
+            div.section-title.col-lg-8.col-md-10.ml-auto.mr-auto
+                h2 Search by Facility
+                form(action='/facilities_info/' autocomplete="off")
+                    div.form-group
+                        div.row
+                            div.form-group.col-md-6
+                                input(list="facilities" name="facility" placeholder="Enter facility name").form-control
+                                datalist(id="facilities")
+                                    each facility in facilities
+                                        option(value=facility.key id='fpn' name='fpn')= facility.key
+                            div.col-sm-4
+                                input(type='submit', value='submit').btn.btn-primary
+
+        div.container
+            div.section-title.col-lg-8.col-md-10.ml-auto.mr-auto
+                h2 Search by State
+                form(action='/state_list/')
+                    div.form-group
+                        div.row
+                            div.form-group.col-md-6
+                                select(list="states" name="states").form-control
+                                    datalist(id="states")
+                                        each state in states
+                                            option(value=state.key)= state.key
+                            div.col-sm-4
+                                input(type='submit', value='submit').btn.btn-primary
+        div.container
+            div.section-title.col-lg-8.col-md-10.ml-auto.mr-auto
+                h2 Upload to speed layer
+                p This will pull data from the CMS API into the speed layer. Default is 1000 records.
+                form(action='/submit_data/')
+                    div.form-group
+                        div.row
+                            div.form-group.col-md-6
+                                input(type='number' name="limit" value="1000").form-control
+                                input(type='submit', value='submit').btn.btn-primary
+
+                h2 Add cases manually
+                form(action='/submit_manual_data/')
+                    div.form-group
+                        div.form-group.col-md-6
+                            input(list="facilities_newrecord" name="facility" placeholder="Enter facility name").form-control
+                            datalist(id="facilities_newrecord")
+                                each facility in facilities
+                                    option(value=facility.key id='fpn' name='fpn')= facility.key
+                            label(for="resAdmissions") COVID-19 Resident Admissions
+                            input(type="number" name="resAdmissions" id="resAdmissions").form-control
+                            label(for="resConfirmed") Confirmed Resident Cases
+                            input(type="number" name="resConfirmed" id="resConfirmed").form-control
+                            label(for="resDeaths") Resident COVID-19 related deaths
+                            input(type="number" name="resDeaths" id="resDeaths").form-control
+                            label(for="staffConfirmed") Confirmed COVID-19 Staff Cases
+                            input(type="number" name="staffConfirmed" id="staffConfirmed").form-control
+                            label(for="staffDeaths") Staff COVID-19 related deaths
+                            input(type="number" name="staffDeaths" id="staffDeaths").form-control
+                            input(type='submit', value='submit').btn.btn-primary
+
+

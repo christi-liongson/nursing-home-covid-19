@@ -1,16 +1,19 @@
+spark.conf.set("spark.sql.debug.maxToStringFields", 1000)
+
 // // prepare search form data
 // val facilities = spark.table("christiannenic_health_deficiencies").select(
 //        "providername", "federalprovidernumber").distinct()
-
+val facilities = spark.table("christiannenic_nursing_covid").select(
+       "providername", "federalprovidernumber").distinct()
 
 // get facilities by state
-val facilities_by_state = spark.table("christiannenic_health_deficiencies").select(
+val facilities_by_state = spark.table("christiannenic_nursing_covid").select(
        "providerstate", "providername", "federalprovidernumber", "provideraddress",
        "providercity", "providerzipcode").distinct()
 
 // get all states
 val state = spark.sql("""select distinct providerstate, providerstate as state_dup
-       from christiannenic_health_deficiencies""")
+       from christiannenic_nursing_covid""")
 
 // prepare christiannenic_penalties table
 val penalties_by_facility = spark.sql("""select federalprovidernumber,
@@ -38,7 +41,7 @@ GROUP BY federalprovidernumber""")
 var covid_numbers = spark.sql("""SELECT federalprovidernumber,
        COUNT(IF(submitteddata == "Y", 1, null)) as totalsubmissions,
        COUNT(submitteddata) as totaldataentries,
-       COUNT(IF(passedqacheck == "N", 1, null)) as totaldidnotpassqa,
+       COUNT(IF(passedqacheck == "Y", 1, null)) as totalpassqa,
        SUM(residentsweeklyadmissionscovid) as totalresidentcovidadmissions,
        SUM(residentsweeklyconfirmedcovid) as totalresidentconfirmedcovid,
        SUM(residentsweeklycoviddeaths) as totalresidentcoviddeaths,
@@ -64,7 +67,7 @@ var covid_response = spark.sql("""SELECT * FROM (SELECT federalprovidernumber,
        oneWeekSupplyEyeProtection, oneWeekSupplyGowns, oneWeekSupplyGloves,
        oneWeekSupplyHandSanitizer, ventilatorDependentUnit,
        numberVentilatorsInFacility, numberVentilatorsInUseCovid,
-       oneWeekSupplyVentilatorSupplies,totalResidentConfirmedPer1000Residents,
+       oneWeekSupplyVentilatorSupplies,
        threeOrMoreConfirmedCasesThisWeek,
        rank() over(partition by federalprovidernumber
        order by reportedyear desc, reportedmonth desc, reportedday desc) as rank
@@ -79,10 +82,12 @@ var covid_over_time_facility = spark.sql("""select
        from christiannenic_nursing_covid""")
 
 // Merge views for facility page
-var facility_covid_info = facilities_by_state.join(covid_numbers, "federalprovidernumber", "left").join(
-       covid_response, "federalprovidernumber", "left").join(deficiencies,
-       "federalprovidernumber").join(penalties_by_facility, "federalprovidernumber", "left")
-
+var facility_covid_info = facilities_by_state.join(covid_numbers,
+       facilities_by_state("federalprovidernumber") ===  covid_numbers("federalprovidernumber"), "left").drop(covid_numbers("federalprovidernumber")).join(
+       covid_response,
+       facilities_by_state("federalprovidernumber") === covid_response("federalprovidernumber"), "left").drop(covid_response("federalprovidernumber")).join(
+       deficiencies,facilities_by_state("federalprovidernumber") === deficiencies("federalprovidernumber"), "left").drop(deficiencies("federalprovidernumber")).join(
+       penalties_by_facility, facilities_by_state("federalprovidernumber") === penalties_by_facility("federalprovidernumber"), "left").drop(penalties_by_facility("federalprovidernumber"))
 
 // Facility overview
 var facility_overview = facility_covid_info.select(
@@ -91,10 +96,6 @@ var facility_overview = facility_covid_info.select(
        "totalresidentcoviddeaths","infectiondeficiencies").withColumn("state_facility",
        concat($"providerstate", lit("_"), regexp_replace(
               facility_covid_info.col("providername"), "[^A-Z0-9_]", "")))
-
-// Get search form data
-val facilities = facility_overview.select(
-       "providername", "federalprovidernumber").distinct()
 
 
 // Write tables to Hive

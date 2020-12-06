@@ -53,9 +53,6 @@ public abstract class NursingHomeProcessor {
 		}
 	}
 
-	private Boolean parseBoolean (String response) {
-		return (response == "Y");
-	}
 
 	NursingHomeCovid nursingFromLine(CSVRecord record) throws NumberFormatException, MissingDataException {
 
@@ -63,7 +60,12 @@ public abstract class NursingHomeProcessor {
 				Byte.parseByte(record.get("Week Ending").substring(0, 2).trim()),
 				Byte.parseByte(record.get("Week Ending").substring(3, 5).trim()),
 				record.get("Federal Provider Number"),
-				parseBoolean(record.get("Submitted Data")));
+				record.get("Provider Name"),
+				record.get("Provider Address"),
+				record.get("Provider City"),
+				record.get("Provider State"),
+				record.get("Provider Zip Code"),
+				record.get("Submitted Data"));
 		if (record.get("Passed Quality Assurance Check").length() > 0) {
 			summary.setPassedQACheck(record.get("Passed Quality Assurance Check"));
 		}
@@ -90,15 +92,6 @@ public abstract class NursingHomeProcessor {
 		}
 		if (record.get("Resident Access to Testing in Facility").length() > 0) {
 			summary.setResidentAccessToTesting(record.get("Resident Access to Testing in Facility"));
-		}
-		if (record.get("Laboratory Type Is State Health Dept").length() > 0) {
-			summary.setLabTypeStateHealthDept(record.get("Laboratory Type Is State Health Dept"));
-		}
-		if (record.get("Laboratory Type Is Private Lab").length() > 0) {
-			summary.setLabTypePrivateLab(record.get("Laboratory Type Is Private Lab"));
-		}
-		if (record.get("Laboratory Type Is Other").length() > 0) {
-			summary.setLabTypeOther(record.get("Laboratory Type Is Other"));
 		}
 		if (record.get("Able to Test or Obtain Resources to Test All Current Residents Within Next 7 Days").length() > 0) {
 			summary.setAbleTestAllResidentsWithin7Days(record.get("Able to Test or Obtain Resources to Test All Current Residents Within Next 7 Days"));
@@ -140,7 +133,7 @@ public abstract class NursingHomeProcessor {
 			summary.setTestedAsymptomaticResidentsAsSurveillance(record.get("Tested Asymptomatic Residents Without Known Exposure as Surveillance"));
 		}
 		if (record.get("Tested Asymptomatic Residents Facility-Wide After a New Case").length() > 0) {
-			summary.setTestedAsymptomaticResidentsAsSurveillance(record.get("Tested Asymptomatic Residents Facility-Wide After a New Case"));
+			summary.setTestedAsymptomaticResidentsFacilityWideAfterNewCase(record.get("Tested Asymptomatic Residents Facility-Wide After a New Case"));
 		}
 		if (record.get("Staff Weekly Confirmed COVID-19").length() > 0) {
 			summary.setStaffWeeklyConfirmedCovid(Short.parseShort(record.get("Staff Weekly Confirmed COVID-19")));
@@ -192,9 +185,6 @@ public abstract class NursingHomeProcessor {
 		}
 		if (record.get("One-Week Supply of Ventilator Supplies").length() > 0) {
 			summary.setOneWeekSupplyVentilatorSupplies(record.get("One-Week Supply of Ventilator Supplies"));
-		}
-		if (record.get("Total Resident Confirmed COVID-19 Cases Per 1,000 Residents").length() > 0) {
-			summary.setTotalResidentConfirmedPer1000Residents(Float.parseFloat(record.get("Total Resident Confirmed COVID-19 Cases Per 1,000 Residents")));
 		}
 		if (record.get("Three or More Confirmed COVID-19 Cases This Week").length() > 0) {
 			summary.setThreeOrMoreConfirmedCasesThisWeek(record.get("Three or More Confirmed COVID-19 Cases This Week"));
