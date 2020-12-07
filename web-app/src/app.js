@@ -38,8 +38,8 @@ function counterToNumber(c) {
 }
 
 function removePrefix(text, prefix) {
-    console.log("text", text);
-    console.log("prefix", prefix)
+    // console.log("text", text);
+    // console.log("prefix", prefix)
     if(text.indexOf(prefix) != 0) {
         throw "missing prefix"
     }
@@ -147,10 +147,75 @@ app.get('/facilities_info/', function (req, res) {
 })
 
 app.get('/state_list/', function (req, res) {
-    console.log(req.query)
+    // console.log(req.query)
     const state = req.query['states'];
-    console.log(state);
-    res.render('stateList')
+    let totalresidentconfirmedcovid = 0;
+    let totalresidentcoviddeaths = 0;
+
+
+    function processFacilityRecord(facilityRecord) {
+        console.log(facilityRecord)
+        var result = { facility : facilityRecord['facility']};
+        ["provideraddress", "providercity", "providername", "providerstate", "providerzipcode", "totalresidentconfirmedcovid",
+        "totalresidentcoviddeaths", "infectiondeficiencies", "federalprovidernumber"].forEach(column => {
+            if (["totalresidentconfirmedcovid", "totalresidentcoviddeaths", "infectiondeficiencies"].includes(column)) {
+                var nursingRecord = counterToNumber(facilityRecord[column])
+                console.log(column, nursingRecord);
+                if(column === "totalresidentconfirmedcovid") {
+                    totalresidentconfirmedcovid += nursingRecord;
+                } else if (column === "totalresidentcoviddeaths"){
+                    totalresidentcoviddeaths += nursingRecord;
+                }
+            } else {
+                var nursingRecord = facilityRecord[column]
+            }
+            // var nursingRecord = facilityRecord[column]
+            // // console.log(nursingRecord)
+            // result[column] = nursingRecord;
+            // console.log(facilityRecord[column]);
+            result[column] = nursingRecord
+
+        })
+        // console.log(result);
+        return result;
+    }
+
+    function stateInfo(cells){
+        var result = [];
+        var facilityRecord;
+        cells.forEach(function(cell) {
+            // console.log(cell)
+            var facility = removePrefix(cell['key'], state + "_");
+            // console.log(facilityName);
+            if (facilityRecord === undefined) {
+                facilityRecord = {facility : facility}
+            } else if (facilityRecord['facility'] != facility) {
+                // console.log(facilityRecord['facility'], 'does not equal', facility)
+                result.push(processFacilityRecord(facilityRecord))
+                facilityRecord = {facility : facility}
+            }
+            // console.log(facilityRecord);
+            facilityRecord[removePrefix(cell['column'], 'summary:')] = cell['$']
+            // console.log(facilityRecord)
+        })
+        result.push(processFacilityRecord(facilityRecord));
+        // console.log(result)
+        return result;
+
+    }
+
+    hclient.table('christiannenic_state_facility_overview').scan({
+        filter: {type: "PrefixFilter", value: state}, maxVersions: 1}, (err, cells) => {
+        // console.log(cells);
+        const si = stateInfo(cells)
+        // console.log(si);
+        // console.log(typeof si);
+        // console.log(totals);
+        res.render('stateList', {state : state, si : si,
+            totalresidentconfirmedcovid : totalresidentconfirmedcovid,
+            totalresidentcoviddeaths : totalresidentcoviddeaths})
+    })
+
 })
 
 app.get('/submit_data/', function (req, res) {
@@ -159,12 +224,6 @@ app.get('/submit_data/', function (req, res) {
             response => response.json()).then(data => data.forEach(
             record => {
                 console.log(record)
-                // const datePattern = /(\d{4})-(\d{2})-(\d{2})/;
-                // const dateArray = record['week_ending'].match(datePattern);
-                // console.log(dateArray);
-                // const reportedYear = dateArray[1];
-                // const reportedMonth = dateArray[2];
-                // const reportedDay = dateArray[3];
                 const federalProviderNumber = record['federal_provider_number'];
                 const resAdmissions = parseInt(record['residents_weekly_admissions']);
                 const resConfirmed = parseInt(record['residents_weekly_confirmed']);
@@ -173,9 +232,6 @@ app.get('/submit_data/', function (req, res) {
                 const staffDeaths = parseInt(record['staff_weekly_covid_19_deaths']);
 
                 var report = {
-                    // reportedYear: reportedYear,
-                    // reportedMonth: reportedMonth,
-                    // reportedDay: reportedDay,
                     federalProviderNumber: federalProviderNumber,
                     resAdmissions: resAdmissions,
                     resConfirmed: resConfirmed,
@@ -208,7 +264,7 @@ app.get('/submit_manual_data/', function(req, res){
             resConfirmed: req.query['resConfirmed'],
             resDeaths: req.query['resDeaths'],
             staffConfirmed: req.query['staffConfirmed'],
-            staffDeaths: req.query['staffConfirmed']
+            staffDeaths: req.query['staffDeaths']
         }
             kafkaProducer.send([{topic: 'christiannenic-nursing-covid', messages: JSON.stringify(report)}],
                 function (err, data) {

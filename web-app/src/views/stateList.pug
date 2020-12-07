@@ -3,3 +3,21 @@ extends layout.pug
 block content
     div.section-title.container
         h1 Facilities in #{state}
+        h2 State totals
+        p #[Total Facility Residents COVID-19 Cases: ] #{totalresidentconfirmedcovid}
+        p #[Total Facility Residents COVID-19 Deaths: ] #{totalresidentcoviddeaths}
+
+
+        each facility in si
+            div.card
+                div.card-body
+                    //var providername = #{facility.providername}
+                    a(href="/facilities_info/?facility=" + facility.providername)
+                        h2=facility.providername
+                    p.lead #{facility.provideraddress} <br /> #{facility.providercity}, #{facility.providerstate} #{facility.providerzipcode}
+                    h3=facility.totalresidentconfirmedcovid
+                    p Total Resident COVID-19 Cases
+                    h3=facility.totalresidentcoviddeaths
+                    p Total Resident COVID-19 Deaths
+                    h3=facility.infectiondeficiencies
+                    p Total Infection Deficiencies

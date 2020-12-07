@@ -18,8 +18,14 @@ You can also submit new data into the same topic on Kafka using the form on the 
 
 We will use this data to increment the christiannenic_facilities_list hbase table.
 
-To create the hbase table, run the following in the hbase shell
+<!-- To create the hbase table, run the following in the hbase shell -->
 
 <!-- ```bash
 create 'christiannenic_latest_covid_reports', 'report'
 ``` -->
+
+```cd
+cd christiannenic/final_project/speedlayer/target
+spark-submit --master local[2] --driver-java-options "-Dlog4j.configuration=file:///home/hadoop/ss.log4j.properties" --class StreamNursing uber-untitled-1.0-SNAPSHOT.jar b-1.mpcs53014-kafka.fwx2ly.c4.kafka.us-east-2.amazonaws.com:9092,b-2.mpcs53014-kafka.fwx2ly.c4.kafka.us-east-2.amazonaws.com:9092
+
+```
