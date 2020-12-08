@@ -38,8 +38,6 @@ function counterToNumber(c) {
 }
 
 function removePrefix(text, prefix) {
-    // console.log("text", text);
-    // console.log("prefix", prefix)
     if(text.indexOf(prefix) != 0) {
         throw "missing prefix"
     }
@@ -142,24 +140,21 @@ app.get('/state_list/', function (req, res) {
     let totalresidentconfirmedcovid = 0;
     let totalresidentcoviddeaths = 0;
 
-
-
     hclient.table('christiannenic_state_facility_overview').scan({
         filter: {type: "PrefixFilter", value: state}, maxVersions: 1
     }, (err, cells) => {
-        // console.log(cells)
         var facilities = cells.map(cell => removePrefix(cell['key'], state))
-        console.log(facilities)
         var facilityInfo = []
-        // let i = 0;
         queryFacilities(0, facilities, facilityInfo)
 
         function queryFacilities(i, facilities, facilityInfo) {
         //    Base case
             if (i === facilities.length - 1) {
-                res.render('stateList', {state : state, si : facilityInfo})
+                res.render('stateList', {state : state, si : facilityInfo,
+                    totalresidentconfirmedcovid : totalresidentconfirmedcovid,
+                    totalresidentcoviddeaths : totalresidentcoviddeaths})
             } else {
-                console.log("in recursive")
+                // console.log("in recursive")
                 hclient.table('christiannenic_facility_covid_info').row(facilities[i]).get((err, cells) => {
                     const columnFamily = "info:"
                     const response = rowToMap(cells)
@@ -172,89 +167,18 @@ app.get('/state_list/', function (req, res) {
                         totalresidentconfirmedcovid: counterToNumber(response[columnFamily + "totalresidentconfirmedcovid"]),
                         totalresidentcoviddeaths: counterToNumber(response[columnFamily + "totalresidentcoviddeaths"]),
                         infectiondeficiencies: counterToNumber(response[columnFamily + "infectiondeficiencies"])}
-                    totalresidentconfirmedcovid += result[totalresidentconfirmedcovid]
-                    totalresidentcoviddeaths += result[totalresidentcoviddeaths]
+                    totalresidentconfirmedcovid += counterToNumber(response[columnFamily + "totalresidentconfirmedcovid"])
+                    totalresidentcoviddeaths += counterToNumber(response[columnFamily + "totalresidentcoviddeaths"])
                     facilityInfo.push(result);
-                    console.log(result)
-                    // i += 1;
                     queryFacilities(i+1, facilities, facilityInfo)
                 })
             }
         }
 
-
-
-        // var results = cells.map(cell => {
-        //     var facility = removePrefix(cell['key'], state);
-        //     // tableResult.push(
-        //     hclient.table('christiannenic_facility_covid_info').row(facility).get((err, cells) => {
-        //         // const result = cells;
-        //         // console.log(cells);
-        //         const columnFamily = "info:"
-        //         const response = rowToMap(cells)
-        //         const result = {
-        //             providername: response[columnFamily + "providername"],
-        //             provideraddress: response[columnFamily + "provideraddress"],
-        //             providercity: response[columnFamily + "providercity"],
-        //             providerstate: response[columnFamily + "providerstate"],
-        //             providerzipcode: response[columnFamily + "providerzipcode"],
-        //             totalresidentconfirmedcovid: counterToNumber(response[columnFamily + "totalresidentconfirmedcovid"]),
-        //             totalresidentcoviddeaths: counterToNumber(response[columnFamily + "totalresidentcoviddeaths"]),
-        //             infectiondeficiencies: counterToNumber(response[columnFamily + "infectiondeficiencies"]),
-        //
-        //
-        //         }
-        //         // return new Promise(resolve => setTimeout(() => resolve(result)));
-        //         //     // tableResult.push(result)
-        //         //     return result
-        //         //     // console.log(result)
-        //         //
-        //         //
-        //         // })
-        //         // var tableResult
-        //
-        //         // push(getFacilityInfo(facility));
-        //
-        //
-        //     })
-        // })
-        // // console.log("try this map", results)
-        //     // console.log("table result", tableResult);
-        //     // hclient.table('christiannenic_facility_covid_info').row(facility).get(function (err, cells){
-        //     //     // const result = cells;
-        //     //     // console.log(cells);
-        //     //     const columnFamily = "info:"
-        //     //     const response = rowToMap(cells)
-        //     //     const result = {
-        //     //         providername : response[columnFamily + "providername"],
-        //     //         provideraddress: response[columnFamily + "provideraddress"],
-        //     //         providercity: response[columnFamily + "providercity"],
-        //     //         providerstate: response[columnFamily + "providerstate"],
-        //     //         providerzipcode : response[columnFamily + "providerzipcode"],
-        //     //         totalresidentconfirmedcovid : counterToNumber(response[columnFamily + "totalresidentconfirmedcovid"]),
-        //     //         totalresidentcoviddeaths : counterToNumber(response[columnFamily + "totalresidentcoviddeaths"]),
-        //     //         infectiondeficiencies : counterToNumber(response[columnFamily + "infectiondeficiencies"]),
-        //     //
-        //     //
-        //     //     }
-        //     //
-        //     //     return result;
-        //     // console.log(result)
-        //     // tableResult.push(result)
-        //     // console.log("pushed to table", tableResult.length)
-        //     // tableResult.push(getFacilityInfo(facility))
-        //     // getFacilityInfo(facility).then(tableR)
-        //     // console.log(tableResult)
-        // Promise.all(results).then(results => {
-        //     console.log(results)
-        //     res.render('stateList', {state: state, si: results})
-        // })
-
         })
 
     })
 
-        // console.log(tableResult.length)
 
 
 app.get('/submit_data/', function (req, res) {
@@ -303,7 +227,8 @@ app.get('/submit_manual_data/', function(req, res){
             resConfirmed: req.query['resConfirmed'],
             resDeaths: req.query['resDeaths'],
             staffConfirmed: req.query['staffConfirmed'],
-            staffDeaths: req.query['staffDeaths']
+            staffDeaths: req.query['staffDeaths'],
+            complaint: req.query['complaint']
         }
             kafkaProducer.send([{topic: 'christiannenic-nursing-covid', messages: JSON.stringify(report)}],
                 function (err, data) {

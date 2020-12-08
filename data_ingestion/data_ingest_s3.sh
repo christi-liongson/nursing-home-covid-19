@@ -1,3 +1,5 @@
+# NOTE: data.medicare.gov links are outdated and ingestion will fail. See README.md for more information.
+
 curl https://data.cms.gov/api/views/s2uc-8wxp/rows.csv | aws s3 cp - s3://christiannenic-mpcs53014/final_project/nursing-covid/covid-19-nursing.csv
 
 curl https://data.medicare.gov/api/views/r5ix-sfxw/rows.csv | aws s3 cp - s3://christiannenic-mpcs53014/final_project/deficiencies/health-deficiencies.csv

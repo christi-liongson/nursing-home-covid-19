@@ -4,7 +4,7 @@ import org.apache.spark.streaming._
 import org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe
 import org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent
 import org.apache.spark.streaming.kafka010._
-import com.fasterxml.jackson.databind.{ DeserializationFeature, ObjectMapper }
+import com.fasterxml.jackson.databind.{DeserializationFeature, ObjectMapper}
 import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import org.apache.hadoop.conf.Configuration
@@ -14,6 +14,8 @@ import org.apache.hadoop.hbase.client.ConnectionFactory
 import org.apache.hadoop.hbase.client.Get
 import org.apache.hadoop.hbase.client.Increment
 import org.apache.hadoop.hbase.util.Bytes
+import org.apache.spark.sql.functions
+import org.apache.spark.sql.functions.{lower, when}
 
 object StreamNursing {
   val mapper = new ObjectMapper()
@@ -34,6 +36,13 @@ object StreamNursing {
     facilityInc.addColumn(Bytes.toBytes("info"), Bytes.toBytes("totalresidentcoviddeaths"), knr.resDeaths)
     facilityInc.addColumn(Bytes.toBytes("info"), Bytes.toBytes("totalstaffconfirmedcovid"), knr.staffConfirmed)
     facilityInc.addColumn(Bytes.toBytes("info"), Bytes.toBytes("totalstaffcoviddeaths"), knr.staffDeaths)
+
+    if (knr.complaint.length() > 0) {
+      facilityInc.addColumn(Bytes.toBytes("info"), Bytes.toBytes("totaldeficiencies"), 1)
+    }
+    if (knr.complaint.toLowerCase.contains("infection")) {
+      facilityInc.addColumn(Bytes.toBytes("info"), Bytes.toBytes("infectiondeficiencies"), 1)
+    }
 
     facilityTable.increment(facilityInc)
     return "Updated speed layer for facility " + knr.federalProviderNumber

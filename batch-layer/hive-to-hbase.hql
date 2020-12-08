@@ -112,36 +112,16 @@ TBLPROPERTIES ('hbase.table.name' = 'christiannenic_covid_over_time');
 insert overwrite table christiannenic_covid_over_time
   select * from christiannenic_covid_over_time_hive;
 
--- Writing christiannenic_state_facility_overview_hive hive table to hbase
-
-create external table  christiannenic_state_facility_overview (
-  state_facility string, providername string,
-  federalprovidernumber string, provideraddress string, providercity string,
-  providerzipcode string, providerstate string, totalresidentconfirmedcovid bigint,
-  totalresidentcoviddeaths bigint,infectiondeficiencies bigint)
-STORED BY 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
-WITH SERDEPROPERTIES ('hbase.columns.mapping' = ':key,
-summary:providername, summary:federalprovidernumber, summary:provideraddress,
-summary:providercity, summary:providerzipcode, summary:providerstate,
-summary:totalresidentconfirmedcovid#b,
-summary:totalresidentcoviddeaths#b, summary:infectiondeficiencies#b')
-TBLPROPERTIES ('hbase.table.name' = 'christiannenic_state_facility_overview');
-
-insert overwrite table christiannenic_state_facility_overview
-  select state_facility, providername, federalprovidernumber, provideraddress,
-  providercity, providerzipcode, providerstate, totalresidentconfirmedcovid,
-  totalresidentcoviddeaths, infectiondeficiencies from christiannenic_state_facility_overview_hive;
-
   -- Writing christiannenic_state_facility_overview_hive hive table to hbase
 
-create external table  christiannenic_state_facility_overview2 (
+create external table  christiannenic_state_facility_overview (
   state_facility string, federalprovidernumber string)
 STORED BY 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
 WITH SERDEPROPERTIES ('hbase.columns.mapping' = ':key,
 summary:federalprovidernumber')
-TBLPROPERTIES ('hbase.table.name' = 'christiannenic_state_facility_overview2');
+TBLPROPERTIES ('hbase.table.name' = 'christiannenic_state_facility_overview');
 
-insert overwrite table christiannenic_state_facility_overview2
+insert overwrite table christiannenic_state_facility_overview
   select state_facility, federalprovidernumber
-  from christiannenic_state_facility_overview_hive2;
+  from christiannenic_state_facility_overview_hive;
 

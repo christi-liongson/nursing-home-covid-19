@@ -1,6 +1,6 @@
-# Batch Layer ReadMe
+# Batch Layer
 
-Data sources are ingested into HDFS for serialization. See `data_ingestion.md` for the script to ingest raw data files. Since data is loaded in as csvs and the size of the files are < 1 GB, storing raw data files in HDFS allows us to append new data to files. If storage later becomes an issue, raw data files should be stored in S3 to preserve space and grouped when importing data back into S3. Sample code for data ingestion into S3 and copying files into HDFS is in `data_ingest_s3.sh`.
+Data sources are ingested into HDFS for serialization. See `data_ingestion` folder for the script to ingest raw data files. Since data is loaded in as csvs and the size of the files are < 1 GB, storing raw data files in HDFS allows us to append new data to files. If storage later becomes an issue, raw data files should be stored in S3 to preserve space and grouped when importing data back into S3. Sample code for data ingestion into S3 and copying files into HDFS is in `data_ingest_s3.sh`.
 
 ## Batch Layer
 
@@ -12,7 +12,7 @@ In anticipation of future changes to the survey, the COVID-19 Nursing Home surve
 
 ## Building Batch View
 
-To create the batch views, open the SSH tunnel and use the following command to open Spark:
+To create the batch views, open an EMR SSH session and use the following command to open Spark:
 
 ```bash
 spark-shell --master local[*] --jars hdfs:///tmp/christiannenic/final_project/jars/serialize-nursing-deficiencies-0.0.1-SNAPSHOT.jar

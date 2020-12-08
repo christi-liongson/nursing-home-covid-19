@@ -1,8 +1,5 @@
-spark.conf.set("spark.sql.debug.maxToStringFields", 1000)
 
-// // prepare search form data
-// val facilities = spark.table("christiannenic_health_deficiencies").select(
-//        "providername", "federalprovidernumber").distinct()
+// prepare search form data
 val facilities = spark.table("christiannenic_nursing_covid").select(
        "providername", "federalprovidernumber").distinct()
 
@@ -85,7 +82,6 @@ var facility_covid_info = facilities_by_state.join(covid_numbers,
 var facility_overview = facility_covid_info.select("providerstate", "federalprovidernumber").distinct().withColumn(
        "state_facility", concat($"providerstate", $"federalprovidernumber")
 )
-
 
 // Write tables to Hive
 

@@ -1,5 +1,8 @@
 extends layout.pug
 
+block title
+    title Nursing Home Investigator
+
 block content
     div.content.clearfix
         div.container.mb-5
@@ -66,6 +69,8 @@ block content
                             input(type="number" name="staffConfirmed" id="staffConfirmed").form-control
                             label(for="staffDeaths") Staff COVID-19 related deaths
                             input(type="number" name="staffDeaths" id="staffDeaths").form-control
+                            label(for="complaint") Submit a complaint
+                            input(type="text" name="complaint" id="complaint").form-control
                             input(type='submit', value='submit').btn.btn-primary
 
 
