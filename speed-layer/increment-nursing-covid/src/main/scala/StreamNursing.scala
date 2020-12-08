@@ -26,27 +26,8 @@ object StreamNursing {
   val facilityTable = hbaseConnection.getTable(TableName.valueOf("christiannenic_facility_covid_info"))
   val stateTable = hbaseConnection.getTable(TableName.valueOf("christiannenic_state_facility_overview"))
 
-//  def getLatestWeather(station: String) = {
-//    val result = latestWeather.get(new Get(Bytes.toBytes(station)))
-//    System.out.println(result.isEmpty())
-//    if(result.isEmpty())
-//      None
-//    else
-//      Some(WeatherReport(
-//        station,
-//        Bytes.toBoolean(result.getValue(Bytes.toBytes("weather"), Bytes.toBytes("fog"))),
-//        Bytes.toBoolean(result.getValue(Bytes.toBytes("weather"), Bytes.toBytes("rain"))),
-//        Bytes.toBoolean(result.getValue(Bytes.toBytes("weather"), Bytes.toBytes("snow"))),
-//        Bytes.toBoolean(result.getValue(Bytes.toBytes("weather"), Bytes.toBytes("hail"))),
-//        Bytes.toBoolean(result.getValue(Bytes.toBytes("weather"), Bytes.toBytes("thunder"))),
-//        Bytes.toBoolean(result.getValue(Bytes.toBytes("weather"), Bytes.toBytes("tornado")))))
-//  }
 
   def incrementReportsByFacility(knr : NursingReport) : String = {
-//    val maybeLatestWeather = getLatestWeather(kfr.originName)
-//    if(maybeLatestWeather.isEmpty)
-//      return "No weather for " + kfr.originName;
-//    val latestWeather = maybeLatestWeather.get
     val facilityInc = new Increment(Bytes.toBytes(knr.federalProviderNumber))
     facilityInc.addColumn(Bytes.toBytes("info"), Bytes.toBytes("totalresidentcovidadmissions"), knr.resAdmissions)
     facilityInc.addColumn(Bytes.toBytes("info"), Bytes.toBytes("totalresidentconfirmedcovid"), knr.resConfirmed)
@@ -57,6 +38,7 @@ object StreamNursing {
     facilityTable.increment(facilityInc)
     return "Updated speed layer for facility " + knr.federalProviderNumber
   }
+
 
   def main(args: Array[String]) {
     if (args.length < 1) {

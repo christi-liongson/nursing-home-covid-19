@@ -74,13 +74,6 @@ var covid_response = spark.sql("""SELECT * FROM (SELECT federalprovidernumber,
        FROM christiannenic_nursing_covid) a
        WHERE a.rank = 1""")
 
-// COVID cases by date per facility
-var covid_over_time_facility = spark.sql("""select
-       concat(federalprovidernumber, "_", reportedyear, "-", reportedmonth, "-", reportedday) as key,
-       reportedyear, reportedmonth, reportedday, residentsweeklyconfirmedcovid,
-       residentsweeklycoviddeaths, staffweeklyconfirmedcovid, staffweeklycoviddeaths
-       from christiannenic_nursing_covid""")
-
 // Merge views for facility page
 var facility_covid_info = facilities_by_state.join(covid_numbers,
        facilities_by_state("federalprovidernumber") ===  covid_numbers("federalprovidernumber"), "left").drop(covid_numbers("federalprovidernumber")).join(
@@ -89,13 +82,9 @@ var facility_covid_info = facilities_by_state.join(covid_numbers,
        deficiencies,facilities_by_state("federalprovidernumber") === deficiencies("federalprovidernumber"), "left").drop(deficiencies("federalprovidernumber")).join(
        penalties_by_facility, facilities_by_state("federalprovidernumber") === penalties_by_facility("federalprovidernumber"), "left").drop(penalties_by_facility("federalprovidernumber"))
 
-// Facility overview
-var facility_overview = facility_covid_info.select(
-       "providername", "federalprovidernumber", "provideraddress", "providercity",
-       "providerzipcode", "providerstate", "totalresidentconfirmedcovid",
-       "totalresidentcoviddeaths","infectiondeficiencies").withColumn("state_facility",
-       concat($"providerstate", lit("_"), regexp_replace(
-              facility_covid_info.col("providername"), "[^A-Z0-9_]", "")))
+var facility_overview = facility_covid_info.select("providerstate", "federalprovidernumber").distinct().withColumn(
+       "state_facility", concat($"providerstate", $"federalprovidernumber")
+)
 
 
 // Write tables to Hive
@@ -103,6 +92,4 @@ var facility_overview = facility_covid_info.select(
 facilities.write.mode("overwrite").saveAsTable("christiannenic_facilities_list_hive")
 state.write.mode("overwrite").saveAsTable("christiannenic_state_list_hive")
 facility_covid_info.write.mode("overwrite").saveAsTable("christiannenic_facility_covid_info_hive")
-covid_over_time_facility.write.mode("overwrite").saveAsTable("christiannenic_covid_over_time_hive")
 facility_overview.write.mode("overwrite").saveAsTable("christiannenic_state_facility_overview_hive")
-

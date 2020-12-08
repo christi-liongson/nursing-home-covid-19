@@ -73,21 +73,13 @@ public abstract class NursingHomeProcessor {
 			summary.setResidentsWeeklyAdmissionsCovid((Short.parseShort(record.get("Residents Weekly Admissions COVID-19"))));
 		}
 		if (record.get("Residents Weekly Confirmed COVID-19").length() > 0) {
-//			System.out.println(record.get("Residents Weekly Confirmed COVID-19"));
-//			System.out.println(Short.parseShort(record.get("Residents Weekly Confirmed COVID-19")));
 			summary.setResidentsWeeklyConfirmedCovid(Short.parseShort(record.get("Residents Weekly Confirmed COVID-19")));
-		} else {
-			System.out.println(record.get("Residents Weekly Confirmed COVID-19") + " is zero");
 		}
 		if (record.get("Residents Weekly Suspected COVID-19").length() > 0) {
 			summary.setResidentsWeeklyAdmissionsCovid(Short.parseShort(record.get("Residents Weekly Suspected COVID-19")));
 		}
 		if (record.get("Residents Weekly COVID-19 Deaths").length() > 0) {
-//			System.out.println(record.get("Residents Weekly COVID-19 Deaths"));
-//			System.out.println(Short.parseShort(record.get("Residents Weekly COVID-19 Deaths")));
 			summary.setResidentsWeeklyCovidDeaths(Short.parseShort(record.get("Residents Weekly COVID-19 Deaths")));
-		} else {
-			System.out.println(record.get("Residents Weekly COVID-19 Deaths") + " is zero");
 		}
 
 		if (record.get("Residents Weekly All Deaths").length() > 0) {
@@ -198,9 +190,6 @@ public abstract class NursingHomeProcessor {
 		if (record.get("Three or More Confirmed COVID-19 Cases This Week").length() > 0) {
 			summary.setThreeOrMoreConfirmedCasesThisWeek(record.get("Three or More Confirmed COVID-19 Cases This Week"));
 		}
-
-
-
 
 		return summary;
 

@@ -59,16 +59,12 @@ app.get('/', function (req, res) {
 
 app.get('/facilities_info/', function (req, res) {
     const facility = req.query['facility']
-    console.log(facility)
     hclient.table('christiannenic_facilities_list').row(facility).get(function (err, cells){
         const facilityFpn = rowToMap(cells);
         const fpn = facilityFpn['facility:federalprovidernumber']
-        console.log("fpn", fpn)
         hclient.table('christiannenic_facility_covid_info').row(fpn).get(function (err, cells){
-            console.log(cells)
             const columnFamily = "info:"
             const response = rowToMap(cells)
-            console.log(response)
 
             function toPercent(num, total) {
                 if (total === 0) {
@@ -79,8 +75,6 @@ app.get('/facilities_info/', function (req, res) {
             }
             const numAllBeds = counterToNumber(response[columnFamily + "numberallbeds"])
             const occupiedBeds = counterToNumber(response[columnFamily + "totalnumberoccupiedbeds"])
-            console.log("numallbeds " +  numAllBeds)
-            console.log("occupied " +  occupiedBeds)
             const percentOccupied = toPercent(occupiedBeds, numAllBeds)
 
             const numVentilators = parseInt(response[columnFamily + "numberventilatorsinfacility"])
@@ -96,9 +90,6 @@ app.get('/facilities_info/', function (req, res) {
             const responseRate = toPercent(totalSubmissions, totalEntries)
             const numPassedQA = counterToNumber(response[columnFamily + "totalpassqa"])
             const qaResponseRate =  toPercent(numPassedQA, totalSubmissions)
-
-            console.log(counterToNumber(response[columnFamily + "totalfines"]))
-            console.log(counterToNumber(response[columnFamily + "totaldeficiencies"]))
 
             res.render('facilities_info',{
                 providerName : response[columnFamily + "providername"],
@@ -147,76 +138,124 @@ app.get('/facilities_info/', function (req, res) {
 })
 
 app.get('/state_list/', function (req, res) {
-    // console.log(req.query)
     const state = req.query['states'];
     let totalresidentconfirmedcovid = 0;
     let totalresidentcoviddeaths = 0;
 
 
-    function processFacilityRecord(facilityRecord) {
-        console.log(facilityRecord)
-        var result = { facility : facilityRecord['facility']};
-        ["provideraddress", "providercity", "providername", "providerstate", "providerzipcode", "totalresidentconfirmedcovid",
-        "totalresidentcoviddeaths", "infectiondeficiencies", "federalprovidernumber"].forEach(column => {
-            if (["totalresidentconfirmedcovid", "totalresidentcoviddeaths", "infectiondeficiencies"].includes(column)) {
-                var nursingRecord = counterToNumber(facilityRecord[column])
-                console.log(column, nursingRecord);
-                if(column === "totalresidentconfirmedcovid") {
-                    totalresidentconfirmedcovid += nursingRecord;
-                } else if (column === "totalresidentcoviddeaths"){
-                    totalresidentcoviddeaths += nursingRecord;
-                }
-            } else {
-                var nursingRecord = facilityRecord[column]
-            }
-            // var nursingRecord = facilityRecord[column]
-            // // console.log(nursingRecord)
-            // result[column] = nursingRecord;
-            // console.log(facilityRecord[column]);
-            result[column] = nursingRecord
-
-        })
-        // console.log(result);
-        return result;
-    }
-
-    function stateInfo(cells){
-        var result = [];
-        var facilityRecord;
-        cells.forEach(function(cell) {
-            // console.log(cell)
-            var facility = removePrefix(cell['key'], state + "_");
-            // console.log(facilityName);
-            if (facilityRecord === undefined) {
-                facilityRecord = {facility : facility}
-            } else if (facilityRecord['facility'] != facility) {
-                // console.log(facilityRecord['facility'], 'does not equal', facility)
-                result.push(processFacilityRecord(facilityRecord))
-                facilityRecord = {facility : facility}
-            }
-            // console.log(facilityRecord);
-            facilityRecord[removePrefix(cell['column'], 'summary:')] = cell['$']
-            // console.log(facilityRecord)
-        })
-        result.push(processFacilityRecord(facilityRecord));
-        // console.log(result)
-        return result;
-
-    }
 
     hclient.table('christiannenic_state_facility_overview').scan({
-        filter: {type: "PrefixFilter", value: state}, maxVersions: 1}, (err, cells) => {
-        // console.log(cells);
-        const si = stateInfo(cells)
-        // console.log(si);
-        // console.log(typeof si);
-        // console.log(totals);
-        res.render('stateList', {state : state, si : si,
-            totalresidentconfirmedcovid : totalresidentconfirmedcovid,
-            totalresidentcoviddeaths : totalresidentcoviddeaths})
+        filter: {type: "PrefixFilter", value: state}, maxVersions: 1
+    }, (err, cells) => {
+        // console.log(cells)
+        var facilities = cells.map(cell => removePrefix(cell['key'], state))
+        console.log(facilities)
+        var facilityInfo = []
+        // let i = 0;
+        queryFacilities(0, facilities, facilityInfo)
+
+        function queryFacilities(i, facilities, facilityInfo) {
+        //    Base case
+            if (i === facilities.length - 1) {
+                res.render('stateList', {state : state, si : facilityInfo})
+            } else {
+                console.log("in recursive")
+                hclient.table('christiannenic_facility_covid_info').row(facilities[i]).get((err, cells) => {
+                    const columnFamily = "info:"
+                    const response = rowToMap(cells)
+                    const result = {
+                        providername: response[columnFamily + "providername"],
+                        provideraddress: response[columnFamily + "provideraddress"],
+                        providercity: response[columnFamily + "providercity"],
+                        providerstate: response[columnFamily + "providerstate"],
+                        providerzipcode: response[columnFamily + "providerzipcode"],
+                        totalresidentconfirmedcovid: counterToNumber(response[columnFamily + "totalresidentconfirmedcovid"]),
+                        totalresidentcoviddeaths: counterToNumber(response[columnFamily + "totalresidentcoviddeaths"]),
+                        infectiondeficiencies: counterToNumber(response[columnFamily + "infectiondeficiencies"])}
+                    totalresidentconfirmedcovid += result[totalresidentconfirmedcovid]
+                    totalresidentcoviddeaths += result[totalresidentcoviddeaths]
+                    facilityInfo.push(result);
+                    console.log(result)
+                    // i += 1;
+                    queryFacilities(i+1, facilities, facilityInfo)
+                })
+            }
+        }
+
+
+
+        // var results = cells.map(cell => {
+        //     var facility = removePrefix(cell['key'], state);
+        //     // tableResult.push(
+        //     hclient.table('christiannenic_facility_covid_info').row(facility).get((err, cells) => {
+        //         // const result = cells;
+        //         // console.log(cells);
+        //         const columnFamily = "info:"
+        //         const response = rowToMap(cells)
+        //         const result = {
+        //             providername: response[columnFamily + "providername"],
+        //             provideraddress: response[columnFamily + "provideraddress"],
+        //             providercity: response[columnFamily + "providercity"],
+        //             providerstate: response[columnFamily + "providerstate"],
+        //             providerzipcode: response[columnFamily + "providerzipcode"],
+        //             totalresidentconfirmedcovid: counterToNumber(response[columnFamily + "totalresidentconfirmedcovid"]),
+        //             totalresidentcoviddeaths: counterToNumber(response[columnFamily + "totalresidentcoviddeaths"]),
+        //             infectiondeficiencies: counterToNumber(response[columnFamily + "infectiondeficiencies"]),
+        //
+        //
+        //         }
+        //         // return new Promise(resolve => setTimeout(() => resolve(result)));
+        //         //     // tableResult.push(result)
+        //         //     return result
+        //         //     // console.log(result)
+        //         //
+        //         //
+        //         // })
+        //         // var tableResult
+        //
+        //         // push(getFacilityInfo(facility));
+        //
+        //
+        //     })
+        // })
+        // // console.log("try this map", results)
+        //     // console.log("table result", tableResult);
+        //     // hclient.table('christiannenic_facility_covid_info').row(facility).get(function (err, cells){
+        //     //     // const result = cells;
+        //     //     // console.log(cells);
+        //     //     const columnFamily = "info:"
+        //     //     const response = rowToMap(cells)
+        //     //     const result = {
+        //     //         providername : response[columnFamily + "providername"],
+        //     //         provideraddress: response[columnFamily + "provideraddress"],
+        //     //         providercity: response[columnFamily + "providercity"],
+        //     //         providerstate: response[columnFamily + "providerstate"],
+        //     //         providerzipcode : response[columnFamily + "providerzipcode"],
+        //     //         totalresidentconfirmedcovid : counterToNumber(response[columnFamily + "totalresidentconfirmedcovid"]),
+        //     //         totalresidentcoviddeaths : counterToNumber(response[columnFamily + "totalresidentcoviddeaths"]),
+        //     //         infectiondeficiencies : counterToNumber(response[columnFamily + "infectiondeficiencies"]),
+        //     //
+        //     //
+        //     //     }
+        //     //
+        //     //     return result;
+        //     // console.log(result)
+        //     // tableResult.push(result)
+        //     // console.log("pushed to table", tableResult.length)
+        //     // tableResult.push(getFacilityInfo(facility))
+        //     // getFacilityInfo(facility).then(tableR)
+        //     // console.log(tableResult)
+        // Promise.all(results).then(results => {
+        //     console.log(results)
+        //     res.render('stateList', {state: state, si: results})
+        // })
+
+        })
+
     })
 
-})
+        // console.log(tableResult.length)
+
 
 app.get('/submit_data/', function (req, res) {
         const numRecords = req.query['limit']

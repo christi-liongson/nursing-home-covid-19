@@ -8,4 +8,4 @@
 
 NOTE: Since this project has started, [data.cms.gov](https://data.cms.gov) redesigned their website. See the readme in the deployment folder for more information.
 
-Site is QuickDeployed on http://ec2-3-15-219-66.us-east-2.compute.amazonaws.com:3016/
+Site is QuickDeployed on http://ec2-3-15-219-66.us-east-2.compute.amazonaws.com:3016/ and on load-balanaced serevers at http://mpcs53014-loadbalancer-217964685.us-east-2.elb.amazonaws.com:3016/

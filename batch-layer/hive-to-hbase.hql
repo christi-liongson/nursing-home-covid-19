@@ -132,3 +132,16 @@ insert overwrite table christiannenic_state_facility_overview
   providercity, providerzipcode, providerstate, totalresidentconfirmedcovid,
   totalresidentcoviddeaths, infectiondeficiencies from christiannenic_state_facility_overview_hive;
 
+  -- Writing christiannenic_state_facility_overview_hive hive table to hbase
+
+create external table  christiannenic_state_facility_overview2 (
+  state_facility string, federalprovidernumber string)
+STORED BY 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
+WITH SERDEPROPERTIES ('hbase.columns.mapping' = ':key,
+summary:federalprovidernumber')
+TBLPROPERTIES ('hbase.table.name' = 'christiannenic_state_facility_overview2');
+
+insert overwrite table christiannenic_state_facility_overview2
+  select state_facility, federalprovidernumber
+  from christiannenic_state_facility_overview_hive2;
+

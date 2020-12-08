@@ -11,8 +11,7 @@ block content
         each facility in si
             div.card
                 div.card-body
-                    //var providername = #{facility.providername}
-                    a(href="/facilities_info/?facility=" + facility.providername)
+                    a(href="/facilities_info/?facility=" + encodeURIComponent(facility.providername))
                         h2=facility.providername
                     p.lead #{facility.provideraddress} <br /> #{facility.providercity}, #{facility.providerstate} #{facility.providerzipcode}
                     h3=facility.totalresidentconfirmedcovid
