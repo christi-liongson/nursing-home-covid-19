@@ -182,38 +182,60 @@ app.get('/state_list/', function (req, res) {
 
 
 app.get('/submit_data/', function (req, res) {
-        const numRecords = req.query['limit']
-        fetch(`https://data.cms.gov/resource/s2uc-8wxp.json?$where=week_ending>'2020-11-15'&$limit=${numRecords}`).then(
-            response => response.json()).then(data => data.forEach(
-            record => {
-                console.log(record)
-                const federalProviderNumber = record['federal_provider_number'];
-                const resAdmissions = parseInt(record['residents_weekly_admissions']);
-                const resConfirmed = parseInt(record['residents_weekly_confirmed']);
-                const resDeaths = parseInt(record['residents_weekly_covid_19']);
-                const staffConfirmed = parseInt(record['staff_weekly_confirmed_covid']);
-                const staffDeaths = parseInt(record['staff_weekly_covid_19_deaths']);
+    const numRecords = req.query['limit']
+    const offset = req.query['offset']
+    fetch(`https://data.cms.gov/resource/s2uc-8wxp.json?$where=week_ending>'2020-11-15'&$limit=${numRecords}&$offset=${offset}`).then(
+        response => response.json()).then(data => data.forEach(
+        record => {
+            console.log(record)
+            let reportResAdmissions = 0;
+            let reportResConfirmed = 0;
+            let reportResDeaths = 0;
+            let reportStaffConfirmed = 0;
+            let reportStaffDeaths = 0;
+            const federalProviderNumber = record['federal_provider_number'];
+            const resAdmissions = parseInt(record['residents_weekly_admissions']);
+            if (resAdmissions !== undefined) {
+                reportResAdmissions = resAdmissions;
+            }
+            const resConfirmed = parseInt(record['residents_weekly_confirmed']);
+            if (resConfirmed !== undefined) {
+                reportResConfirmed = resConfirmed;
+            }
+            const resDeaths = parseInt(record['residents_weekly_covid_19']);
+            if (resDeaths !== undefined) {
+                reportResDeaths = resDeaths;
+            }
+            const staffConfirmed = parseInt(record['staff_weekly_confirmed_covid']);
+            if (staffConfirmed !== undefined) {
+                reportStaffConfirmed = staffConfirmed;
+            }
+            const staffDeaths = parseInt(record['staff_weekly_covid_19_deaths']);
+            if (staffDeaths !== undefined) {
+                reportStaffDeaths = staffDeaths;
+            }
 
-                var report = {
-                    federalProviderNumber: federalProviderNumber,
-                    resAdmissions: resAdmissions,
-                    resConfirmed: resConfirmed,
-                    resDeaths: resDeaths,
-                    staffConfirmed: staffConfirmed,
-                    staffDeaths: staffDeaths
-                }
+            var report = {
+                federalProviderNumber: federalProviderNumber,
+                resAdmissions: reportResAdmissions,
+                resConfirmed: reportResConfirmed,
+                resDeaths: reportResDeaths,
+                staffConfirmed: reportStaffConfirmed,
+                staffDeaths: reportStaffDeaths,
+                complaint: ""
+            }
 
-                kafkaProducer.send([{topic: 'christiannenic-nursing-covid', messages: JSON.stringify(report)}],
-                    function (err, data) {
-                        console.log("Kafka Error: " + err)
-                        console.log(data);
-                        console.log(report);
+            kafkaProducer.send([{topic: 'christiannenic-nursing-covid', messages: JSON.stringify(report)}],
+                function (err, data) {
+                    console.log("Kafka Error: " + err)
+                    console.log(data);
+                    console.log(report);
 
-                    })
+                })
 
-            }))
+        }))
     res.send("Data written to Kafka");
-    });
+});
 
 app.get('/submit_manual_data/', function(req, res){
     const facility = req.query['facility']
@@ -230,6 +252,7 @@ app.get('/submit_manual_data/', function(req, res){
             staffDeaths: req.query['staffDeaths'],
             complaint: req.query['complaint']
         }
+        console.log(report);
             kafkaProducer.send([{topic: 'christiannenic-nursing-covid', messages: JSON.stringify(report)}],
                 function (err, data) {
                     console.log("Kafka Error: " + err)

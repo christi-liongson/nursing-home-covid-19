@@ -13,3 +13,5 @@ CREATE EXTERNAL TABLE IF NOT EXISTS christiannenic_nursing_covid
 SELECT * FROM christiannenic_nursing_covid LIMIT 1;
 
 DESCRIBE christiannenic_nursing_covid;
+
+select sum(residentsweeklyconfirmedcovid) as total from christiannenic_nursing_covid order by total desc limit 5;

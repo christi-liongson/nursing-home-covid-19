@@ -37,12 +37,13 @@ object StreamNursing {
     facilityInc.addColumn(Bytes.toBytes("info"), Bytes.toBytes("totalstaffconfirmedcovid"), knr.staffConfirmed)
     facilityInc.addColumn(Bytes.toBytes("info"), Bytes.toBytes("totalstaffcoviddeaths"), knr.staffDeaths)
 
-    if (knr.complaint.length() > 0) {
+    if (knr.complaint) {
       facilityInc.addColumn(Bytes.toBytes("info"), Bytes.toBytes("totaldeficiencies"), 1)
+      if (knr.complaint.toLowerCase.contains("infection")) {
+        facilityInc.addColumn(Bytes.toBytes("info"), Bytes.toBytes("infectiondeficiencies"), 1)
+      }
     }
-    if (knr.complaint.toLowerCase.contains("infection")) {
-      facilityInc.addColumn(Bytes.toBytes("info"), Bytes.toBytes("infectiondeficiencies"), 1)
-    }
+
 
     facilityTable.increment(facilityInc)
     return "Updated speed layer for facility " + knr.federalProviderNumber

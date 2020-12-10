@@ -12,6 +12,10 @@ NOTE: Since this project has started, [data.cms.gov](https://data.cms.gov) redes
 
 Site is QuickDeployed on http://ec2-3-15-219-66.us-east-2.compute.amazonaws.com:3016/ and on load-balanaced servers at http://mpcs53014-loadbalancer-217964685.us-east-2.elb.amazonaws.com:3016/
 
+Two forms are available on the web application to load data from the speed layer:
+* Via CMS Api (specify limit and offset) -- Note that Kafka ingestion is not parallelized. Recommend using low limit numbers to ensure that HBase tables increment all streaming data.
+* Via form
+
 Use the following spark-submit command to increment the data streamed from Kafka to the batch view table:
 
 ```bash

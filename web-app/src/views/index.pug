@@ -43,12 +43,16 @@ block content
         div.container
             div.section-title.col-lg-8.col-md-10.ml-auto.mr-auto
                 h2 Upload to speed layer
-                p This will pull data from the CMS API into the speed layer. Default is 1000 records.
+                p This will pull data from the CMS API into the speed layer. Default for limit is 100 records, and offset is 0 records. Use offset to page through loading in the results.
+                p Tip: use lower limits to ensure that all data is consumed by Kafka
                 form(action='/submit_data/')
                     div.form-group
                         div.row
                             div.form-group.col-md-6
-                                input(type='number' name="limit" value="1000").form-control
+                                label(for="limit") Limit
+                                input(type='number' name="limit" id="limit" value="100").form-control
+                                label(for="offset") Offset
+                                input(type='number' name="offset" id="offset" value="0").form-control
                                 input(type='submit', value='submit').btn.btn-primary
 
                 h2 Add cases manually
@@ -60,17 +64,17 @@ block content
                                 each facility in facilities
                                     option(value=facility.key id='fpn' name='fpn')= facility.key
                             label(for="resAdmissions") COVID-19 Resident Admissions
-                            input(type="number" name="resAdmissions" id="resAdmissions").form-control
+                            input(type="number" name="resAdmissions" id="resAdmissions" value="0").form-control
                             label(for="resConfirmed") Confirmed Resident Cases
-                            input(type="number" name="resConfirmed" id="resConfirmed").form-control
+                            input(type="number" name="resConfirmed" id="resConfirmed" value="0").form-control
                             label(for="resDeaths") Resident COVID-19 related deaths
-                            input(type="number" name="resDeaths" id="resDeaths").form-control
+                            input(type="number" name="resDeaths" id="resDeaths" value="0").form-control
                             label(for="staffConfirmed") Confirmed COVID-19 Staff Cases
-                            input(type="number" name="staffConfirmed" id="staffConfirmed").form-control
+                            input(type="number" name="staffConfirmed" id="staffConfirmed" value="0").form-control
                             label(for="staffDeaths") Staff COVID-19 related deaths
-                            input(type="number" name="staffDeaths" id="staffDeaths").form-control
+                            input(type="number" name="staffDeaths" id="staffDeaths" value="0").form-control
                             label(for="complaint") Submit a complaint
-                            input(type="text" name="complaint" id="complaint").form-control
+                            input(type="text" name="complaint" id="complaint" value="").form-control
                             input(type='submit', value='submit').btn.btn-primary
 
 
